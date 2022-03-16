@@ -1,0 +1,15 @@
+{
+    "programsDir": "programs",
+    "fileServer": {
+        "dir": "fileserver",
+        "uploadDir": "upload",
+        "workDir": "work"
+    },
+    "WorkedDirKeepSec": 600,
+    "ProgramServerIP": "127.0.0.1",
+    "ProgramServerPort": "8081",
+    "ExecuteTimeoutSec": 10,
+    "StdoutBufferSize": 1000000,
+    "StderrBufferSize": 1000000,
+    "MaxUploadSizeMB": 300
+}

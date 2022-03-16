@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/body.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/button.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/google_loading.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/input_text.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/input_file.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/main-div.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/progress.css">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+    <title>Execution</title>
+</head>
+
+<!--    Googleのローディングのやつ-->
+<div class="loading" id="GoogleLoading" style="display:none">
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
+    <div class="loading-bar"></div>
+</div>
+
+
+<p>プログラム名: {{ .Name }}</p>
+<form id="form" enctype="multipart/form-data" action="/user/exec" method="POST">
+    <input type="hidden" id="proName" name="proName" value="{{ .Name }}"/>
+    <div class="cp_iptxt">
+        <label class="ef">
+            <input type="text" id="parameta" name="parameta" value="" placeholder="パラメータ"/>
+        </label>
+    </div>
+
+    <br/><br/>
+    <div id="drop-zone" style="border: 5px dashed #2F4F4F; padding: 30px">
+        <input type="file" name="file" id="file-input" multiple required/>
+    </div>
+    <br/><br/>
+    <button class="btn btn-gradient" type="button" id="submit" onclick="Submit()">実行</button>
+</form>
+
+<br>
+<progress value="0" max="100" style="display: none" id="progress"></progress>
+
+<p id="print"></p>
+<button class="btn btn-gradient" id="all-download" type="button" onclick="AllDownload();" style="display: none">AllDownload</button>
+<div id="output" style="display: flex; flex-wrap: wrap"></div>
+
+<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+
+<script>
+    function basename(path) {
+        return path.replace(/.*\//, "");
+    }
+
+    // この関数は非同期で動作するため、処理の流れが止まるわけではない
+    function sleep(waitSec, callbackFunc) {
+        // 経過時間（秒）
+        var spanedSec = 0;
+        // 1秒間隔で無名関数を実行
+        var id = setInterval(function () {
+            spanedSec++;
+            // 経過時間 >= 待機時間の場合、待機終了。
+            if (spanedSec >= waitSec) {
+                // タイマー停止
+                clearInterval(id);
+                // 完了時、コールバック関数を実行
+                if (callbackFunc) callbackFunc();
+            }
+        }, 100);
+    }
+
+    function AllDownload() {
+        download_links = document.getElementsByClassName("download-link")
+        for (let i = 0; i < download_links.length; ++i) {
+            download_links[i].click()
+        }
+    }
+
+
+    function AjaxPost(proName, inputFile, form_data) {
+        const root_div = document.getElementById("output");
+
+        let ajaxOK = true;
+        // サーバからの返答がJSONではない場合などでajaxが失敗した時に備えて
+        // 定義しておく。
+        let ajaxFailedJSON = "";
+        let execServerURI = "{{ .ExecServerURI }}";
+        postURL = execServerURI+"/api/exec/" + proName
+        console.log("api url: " + postURL)
+        $.ajax({
+            type: "POST",
+            url:  postURL,
+            data: form_data,
+            enctype: "multipart/form-data",
+            // headers: {
+            //     "Access-Control-Allow-Origin": "*",
+            //     "Access-Control-Allow-Headers": "access-control-allow-origin, access-control-allow-headers",
+            //     "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE",
+            // },
+            crossDomain: true,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            encode: true,
+            async: true,
+        }).done(function (res) {
+            console.log("ajax success")
+        }).fail(function (res) {
+            console.log("ajax fail")
+            console.log(res.responseText)
+            ajaxOK = false;
+            // サーバからの返答がない場合などでajaxが失敗した場合はエラーがわかりやすい
+            // ように仮のJSONを作成し、webページに表示する
+            // res.responseTextにサーバからの返答が入っている。
+            // windowsなどでそもそも実行コマンドが異なる場合(moveコマンドがありません.みたいな)にこの条件に入る
+            // とりあえず予期しないエラーの場合はここにくる。
+            ajaxFailedJSON = {
+                "outURLs": null,
+                "stdout": "",
+                "stderr": "",
+                "status": "web page loading error.",
+                "errmsg": "msg from server: " + res.responseText
+            }
+        }).always(function (res) {
+            console.log(res);
+
+            if (ajaxOK === false) {
+                res = ajaxFailedJSON;
+                console.log(res);
+            }
+
+            // main_divに１ファイルの処理結果を表示する。
+            const main_div = document.createElement("div");
+            main_div.style.width = "fit-content";
+            main_div.style.marginLeft = "15px";
+
+            // 入力ファイルを表示
+            const input_file_p = document.createElement("p")
+            input_file_p.innerText = "InputFile: " + inputFile
+            main_div.appendChild(input_file_p)
+            main_div.appendChild(document.createElement("br"))
+
+            // 結果のステータスを表示
+            const status_p = document.createElement("p")
+            status_p.innerText = "Status: " + res.status
+
+            // stdout
+            const stdout_textarea = document.createElement("textarea")
+            stdout_textarea.rows = 10
+            stdout_textarea.cols = 100
+            stdout_textarea.innerText = res.stdout
+            stdout_textarea.style.display = "none";
+
+            const stdout_print_button = document.createElement("button")
+            stdout_print_button.textContent = "Stdout"
+            stdout_print_button.classList.add("btn")
+            stdout_print_button.classList.add("btn-gradient")
+            stdout_print_button.onclick = function () {
+                if (stdout_textarea.style.display === "none") {
+                    stdout_textarea.style.display = "block";
+                } else {
+                    stdout_textarea.style.display = "none";
+                }
+            }
+
+            // stderr
+            const stderr_textarea = document.createElement("textarea")
+            stderr_textarea.rows = 10
+            stderr_textarea.cols = 100
+            stderr_textarea.innerText = res.stderr
+            stderr_textarea.style.display = "none"
+
+            const stderr_print_button = document.createElement("button")
+            stderr_print_button.textContent = "Stderr"
+            stderr_print_button.classList.add("btn")
+            stderr_print_button.classList.add("btn-gradient")
+            stderr_print_button.onclick = function () {
+                if (stderr_textarea.style.display === "none") {
+                    stderr_textarea.style.display = "block";
+                } else {
+                    stderr_textarea.style.display = "none";
+                }
+            }
+
+            // errmsg
+            const errmsg_p = document.createElement("p")
+            errmsg_p.innerText = "Errmsg: " + res.errmsg
+
+            // ダウンロードリンクなどを表示する
+            const download_p = document.createElement("p")
+            download_p.innerText = "Downloads: "
+            main_div.appendChild(download_p)
+            if (res.outURLs === null) {
+                console.log("out url is null.")
+            }else {
+                for (let i = 0; i < res.outURLs.length; ++i) {
+                    const download_link = document.createElement("a");
+                    download_link.classList.add("download-link")
+                    var linkText = document.createTextNode(basename(res.outURLs[i]));
+                    download_link.appendChild(linkText);
+                    download_link.href = res.outURLs[i];
+                    download_link.download = basename(res.outURLs[i])
+                    download_link.target = "_blank";
+                    main_div.appendChild(download_link)
+                    main_div.appendChild(document.createElement("br"))
+                }
+            }
+
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(status_p)
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(stdout_print_button)
+            main_div.appendChild(stdout_textarea)
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(stderr_print_button)
+            main_div.appendChild(stderr_textarea)
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(document.createElement("br"))
+            main_div.appendChild(errmsg_p)
+            main_div.setAttribute("class", "main-div")
+
+            root_div.appendChild(main_div)
+        })
+    }
+
+    // アップロードするファイルのリスト
+    let Files = "";
+
+    function Submit() {
+        // ファイルが入力されているか確認
+        if (Files.length === 0 && document.getElementById("file-input").files.length === 0) {
+            alert("ファイルを指定してください。")
+            return
+        }
+
+        // 画面の色々なものを表示させる
+        // 再度実行された時のことも考える。
+        document.getElementById("print").innerText = "Processing....";
+        document.getElementById("progress").style.display = "block";
+        document.getElementById("progress").setAttribute("value", 0);
+        document.getElementById("GoogleLoading").style.display = "block";
+        // 前回の出力結果を全て削除する
+        let output_div = document.getElementById("output");
+        while(output_div.lastChild) {
+            output_div.removeChild(output_div.lastChild)
+        }
+
+
+        // ファイル参照で選択した場合
+        if (Files === "") {
+            console.log("Files is empty.")
+            Files = document.getElementById("file-input").files
+        }
+
+        // プログラム名、パラメータを取得する
+        proName = document.getElementById("proName").value
+        parameta = document.getElementById("parameta").value
+
+        for (let i = 0; i < Files.length; ++i) {
+            const form = $('#form')[0];
+            const data = new FormData(form);
+            // file項目を上書き
+            data.set("file", Files[i])
+
+            // ajaxでformdataを非同期でサーバへ送信
+            AjaxPost(proName, Files[i].name, data)
+        }
+
+        finish()
+    };
+
+    function finish() {
+        sleep(0.1, function () {
+            // outputdivの子要素がプロセスが終了するごとに増えるのでそれを見て進捗状況を計算し、表示する。
+            output_div = document.getElementById("output")
+            number_of_finish = output_div.childElementCount
+            number_of_all_process = Files.length
+            document.getElementById("progress").value = (number_of_finish / number_of_all_process) * 100
+
+            // プロセスが全て終了したら
+            if (number_of_finish === number_of_all_process) {
+                document.getElementById("GoogleLoading").style.display = "none";
+                document.getElementById("print").innerText = "Process Finish!!";
+                document.getElementById("all-download").style.display = "block";
+            } else {
+                // プロセスが全て終了していない場合はまた呼び出す。
+                finish()
+            }
+        });
+    }
+
+
+    // ファイルドロップの機能
+    var dropZone = document.getElementById("drop-zone");
+    var fileInput = document.getElementById("file-input");
+
+    dropZone.addEventListener(
+        "dragover",
+        function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.style.background = "#e1e7f0";
+        },
+        false
+    );
+
+    dropZone.addEventListener(
+        "dragleave",
+        function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.style.background = "#ffffff";
+        },
+        false
+    );
+
+    dropZone.addEventListener(
+        "drop",
+        function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            this.style.background = "#ffffff"; //背景色を白に戻す
+            var files = e.dataTransfer.files; //ドロップしたファイルを取得
+            Files = files;
+            fileInput.files = files; //inputのvalueをドラッグしたファイルに置き換える。
+        },
+        false
+    );
+</script>
+</body>
+
+</html>

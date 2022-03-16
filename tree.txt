@@ -1,0 +1,367 @@
+.
+├── README.txt
+├── cli
+│   ├── README.txt
+│   ├── cmd
+│   │   └── application
+│   │       └── main
+│   │           ├── main.go
+│   │           └── main_test.go
+│   ├── config
+│   │   ├── cli_config.go
+│   │   ├── cli_config.json
+│   │   └── cli_config_test.go
+│   ├── loadTest.sh
+│   ├── materials
+│   │   └── test.txt
+│   └── pkg
+│       ├── download
+│       │   ├── download.go
+│       │   └── download_test.go
+│       ├── msgs
+│       │   └── msgs.go
+│       ├── post
+│       │   ├── post.go
+│       │   └── post_test.go
+│       └── selectServer
+│           ├── selectServer.go
+│           └── selectServer_test.go
+├── deployment
+│   ├── k8s
+│   │   ├── apigw-kube
+│   │   │   ├── Dockerfile
+│   │   │   └── apigw
+│   │   │       ├── apigw
+│   │   │       ├── config.json
+│   │   │       ├── log.txt
+│   │   │       ├── static
+│   │   │       │   ├── css
+│   │   │       │   │   ├── body.css
+│   │   │       │   │   ├── button.css
+│   │   │       │   │   ├── main.css
+│   │   │       │   │   ├── table.css
+│   │   │       │   │   └── table_number.css
+│   │   │       │   ├── img
+│   │   │       │   │   └── favicon.png
+│   │   │       │   └── js
+│   │   │       │       └── main.js
+│   │   │       └── templates
+│   │   │           └── top.html
+│   │   ├── apigw.yml
+│   │   ├── cli
+│   │   │   ├── cli
+│   │   │   ├── cli_config.json
+│   │   │   ├── input.txt
+│   │   │   └── test.sh
+│   │   ├── configmap.yml
+│   │   ├── deploy.sh
+│   │   ├── exec-kube1
+│   │   │   ├── Dockerfile
+│   │   │   └── exec
+│   │   │       ├── config
+│   │   │       │   ├── config.json
+│   │   │       │   └── programConfig.json
+│   │   │       ├── exec
+│   │   │       ├── fileserver
+│   │   │       │   └── upload
+│   │   │       └── programs
+│   │   │           └── convertToJson
+│   │   │               ├── config.json
+│   │   │               ├── convert_json.py
+│   │   │               └── help.txt
+│   │   ├── exec-kube2
+│   │   │   ├── Dockerfile
+│   │   │   └── exec
+│   │   │       ├── config
+│   │   │       │   ├── config.json
+│   │   │       │   └── programConfig.json
+│   │   │       ├── exec
+│   │   │       ├── fileserver
+│   │   │       │   └── upload
+│   │   │       └── programs
+│   │   │           └── convertToJson
+│   │   │               ├── config.json
+│   │   │               ├── convert_json.py
+│   │   │               └── help.txt
+│   │   ├── exec1.yml
+│   │   ├── exec2.yml
+│   │   ├── website-kube
+│   │   │   ├── Dockerfile
+│   │   │   └── website
+│   │   │       ├── ui
+│   │   │       │   ├── html
+│   │   │       │   │   ├── exec.html
+│   │   │       │   │   └── top.html
+│   │   │       │   └── static
+│   │   │       │       ├── css
+│   │   │       │       │   ├── body.css
+│   │   │       │       │   ├── button.css
+│   │   │       │       │   ├── google_loading.css
+│   │   │       │       │   ├── input_file.css
+│   │   │       │       │   ├── input_text.css
+│   │   │       │       │   ├── main-div.css
+│   │   │       │       │   ├── progress.css
+│   │   │       │       │   └── table.css
+│   │   │       │       ├── img
+│   │   │       │       │   └── favicon.png
+│   │   │       │       └── js
+│   │   │       │           └── main.js
+│   │   │       └── website
+│   │   └── website.yml
+│   └── local
+│       ├── deploy.sh
+│       ├── files
+│       │   ├── apigw1
+│       │   │   └── apigw
+│       │   ├── apigw2
+│       │   │   └── apigw
+│       │   ├── cli
+│       │   │   ├── cli
+│       │   │   ├── cli_config.json
+│       │   │   ├── input.txt
+│       │   │   └── test.sh
+│       │   ├── exec1
+│       │   │   ├── config
+│       │   │   │   └── programConfig.json
+│       │   │   ├── exec
+│       │   │   ├── fileserver
+│       │   │   │   ├── upload
+│       │   │   │   └── work
+│       │   │   │       └── toZip
+│       │   │   │           ├── 2022-03-13-09-54-40-OZhV3k8RNPeB7Ck9EN5M
+│       │   │   │           │   ├── test.txt
+│       │   │   │           │   └── wu7KknceNKtjy94iDdXG_out
+│       │   │   │           │       ├── test.txt.json
+│       │   │   │           │       └── test.txt.json2
+│       │   │   │           ├── 2022-03-13-09-58-08-HVXSptgMY0lJ7BSwVtRN
+│       │   │   │           │   ├── Jj9cywO2isJzIXpeALGr_out
+│       │   │   │           │   │   ├── a.docx.json.json
+│       │   │   │           │   │   └── a.docx.json.json2
+│       │   │   │           │   └── a.docx.json
+│       │   │   │           └── 2022-03-13-09-58-08-nVPSYjK0yxRVB7hKqr1f
+│       │   │   │               ├── V2g2NPgrrPJ1jpMlgiOD_out
+│       │   │   │               │   ├── test.txt.json
+│       │   │   │               │   └── test.txt.json2
+│       │   │   │               └── test.txt
+│       │   │   └── programs
+│       │   │       └── convertToJson
+│       │   │           ├── config.json
+│       │   │           ├── convert_json.py
+│       │   │           └── help.txt
+│       │   ├── exec2
+│       │   │   ├── config
+│       │   │   │   └── programConfig.json
+│       │   │   ├── exec
+│       │   │   ├── fileserver
+│       │   │   │   ├── upload
+│       │   │   │   └── work
+│       │   │   │       └── toZip
+│       │   │   │           └── 2022-03-13-09-55-26-VgPyRaYoogOJ9RaJZf9o
+│       │   │   │               ├── hVuFvGxji10KEBikgpQy_out
+│       │   │   │               │   └── test.txt.zip
+│       │   │   │               └── test.txt
+│       │   │   └── programs
+│       │   │       ├── convertToJson
+│       │   │       │   ├── config.json
+│       │   │       │   ├── convert_json.py
+│       │   │       │   └── help.txt
+│       │   │       ├── err
+│       │   │       │   ├── config.json
+│       │   │       │   ├── convert_json.py
+│       │   │       │   └── help.txt
+│       │   │       └── sleep
+│       │   │           ├── config.json
+│       │   │           ├── convert_json.py
+│       │   │           └── help.txt
+│       │   └── website1
+│       │       ├── ui
+│       │       │   ├── html
+│       │       │   │   ├── exec.html
+│       │       │   │   └── top.html
+│       │       │   └── static
+│       │       │       ├── css
+│       │       │       │   ├── body.css
+│       │       │       │   ├── button.css
+│       │       │       │   ├── google_loading.css
+│       │       │       │   ├── input_file.css
+│       │       │       │   ├── input_text.css
+│       │       │       │   ├── main-div.css
+│       │       │       │   ├── progress.css
+│       │       │       │   └── table.css
+│       │       │       ├── img
+│       │       │       │   └── favicon.png
+│       │       │       └── js
+│       │       │           └── main.js
+│       │       └── website
+│       ├── fileserver
+│       │   ├── upload
+│       │   └── work
+│       │       └── toZip
+│       ├── log
+│       │   ├── apigw1.log
+│       │   ├── apigw2.log
+│       │   ├── exec1.log
+│       │   ├── exec2.log
+│       │   └── website1.log
+│       ├── server_kill.sh
+│       └── server_run.sh
+├── diff.txt
+├── go.mod
+├── how_to_dev.txt
+├── microservices
+│   ├── apigw
+│   │   ├── README.txt
+│   │   ├── cmd
+│   │   │   └── application
+│   │   │       ├── app.go
+│   │   │       ├── handlers.go
+│   │   │       ├── handlers_test.go
+│   │   │       ├── helpers.go
+│   │   │       ├── main
+│   │   │       │   └── main.go
+│   │   │       ├── router.go
+│   │   │       └── server.go
+│   │   ├── env
+│   │   │   ├── config.json
+│   │   │   └── env.go
+│   │   └── pkg
+│   │       ├── getAllPrograms
+│   │       │   ├── getAllPrograms.go
+│   │       │   └── getAllPrograms_test.go
+│   │       ├── memoryGetter
+│   │       │   ├── memoryGetter.go
+│   │       │   └── memoryGetter_test.go
+│   │       ├── minimumServerSelector
+│   │       │   ├── minimumServerSelector.go
+│   │       │   └── minimumServerSelector_test.go
+│   │       ├── programHasServers
+│   │       │   ├── programHasServers.go
+│   │       │   └── programHasServers_test.go
+│   │       └── serverAliveConfirmer
+│   │           ├── serverAliveConfirmer.go
+│   │           └── serverAliveConfirmer_test.go
+│   ├── exec
+│   │   ├── README.txt
+│   │   ├── cmd
+│   │   │   └── application
+│   │   │       ├── app.go
+│   │   │       ├── helpers.go
+│   │   │       ├── main
+│   │   │       │   └── main.go
+│   │   │       ├── program.go
+│   │   │       ├── program_test.go
+│   │   │       ├── router.go
+│   │   │       ├── server.go
+│   │   │       ├── uploadHandler.go
+│   │   │       └── uploadHandler_test.go
+│   │   ├── config
+│   │   │   ├── config
+│   │   │   │   ├── config.json
+│   │   │   │   ├── programConfig.json
+│   │   │   │   └── programConfig_test.json
+│   │   │   ├── programConf.go
+│   │   │   ├── programConf_test.go
+│   │   │   └── programs
+│   │   │       ├── convertToJson
+│   │   │       │   ├── config.json
+│   │   │       │   ├── convert_json.py
+│   │   │       │   └── help.txt
+│   │   │       ├── err
+│   │   │       │   ├── config.json
+│   │   │       │   ├── convert_json.py
+│   │   │       │   └── help.txt
+│   │   │       ├── move
+│   │   │       │   └── help.txt
+│   │   │       └── sleep
+│   │   │           ├── config.json
+│   │   │           ├── convert_json.py
+│   │   │           └── help.txt
+│   │   ├── env
+│   │   │   └── env.go
+│   │   └── pkg
+│   │       ├── execution
+│   │       │   ├── contextManager
+│   │       │   │   ├── contextManager.go
+│   │       │   │   └── contextManager_test.go
+│   │       │   ├── executer
+│   │       │   │   ├── executer.go
+│   │       │   │   └── executer_test.go
+│   │       │   └── outputManager
+│   │       │       └── outputManager.go
+│   │       └── msgs
+│   │           ├── programMsgs.go
+│   │           └── userMsgs.go
+│   └── website
+│       ├── cmd
+│       │   └── application
+│       │       ├── app.go
+│       │       ├── handlers.go
+│       │       ├── handlers_test.go
+│       │       ├── helpers.go
+│       │       ├── main
+│       │       │   └── main.go
+│       │       ├── router.go
+│       │       ├── server.go
+│       │       └── ui
+│       │           ├── html
+│       │           │   ├── exec.html
+│       │           │   └── top.html
+│       │           └── static
+│       │               ├── css
+│       │               │   ├── body.css
+│       │               │   ├── button.css
+│       │               │   ├── google_loading.css
+│       │               │   ├── input_file.css
+│       │               │   ├── input_text.css
+│       │               │   ├── main-div.css
+│       │               │   ├── progress.css
+│       │               │   └── table.css
+│       │               ├── img
+│       │               │   └── favicon.png
+│       │               └── js
+│       │                   └── main.js
+│       └── env
+│           └── env.go
+├── pkg
+│   ├── http
+│   │   ├── handlers
+│   │   │   └── handlers.go
+│   │   ├── middlewares
+│   │   │   └── middlewares.go
+│   │   ├── request
+│   │   │   └── request.go
+│   │   ├── upload
+│   │   │   ├── upload.go
+│   │   │   └── upload_test.go
+│   │   └── url
+│   │       └── url.go
+│   ├── int
+│   │   └── int.go
+│   ├── log
+│   │   ├── logger.go
+│   │   ├── package_log.go
+│   │   ├── rotate.go
+│   │   └── rotate_test.go
+│   ├── os
+│   │   ├── deleteDir.go
+│   │   ├── deleteDir_test.go
+│   │   ├── execution.go
+│   │   ├── execution_test.go
+│   │   ├── file.go
+│   │   ├── file_test.go
+│   │   ├── getCurrentDir.go
+│   │   ├── mover.go
+│   │   ├── mover_test.go
+│   │   └── os.go
+│   ├── random
+│   │   └── random.go
+│   ├── runtime
+│   │   └── runtime.go
+│   └── string
+│       └── string.go
+├── test
+│   ├── materials.go
+│   └── server.go
+└── tree.txt
+
+141 directories, 223 files

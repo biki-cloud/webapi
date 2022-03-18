@@ -21,60 +21,20 @@ spec:
           workingDir: /root/exec
           ports:
             - containerPort: 80
-          command: [ "/root/exec/exec" ]
           volumeMounts:
-            - name: exec2-persistent-storage
+            - name: nfs-pv-storage
               mountPath: /root/exec/fileserver
           envFrom:
             - configMapRef:
                 name: whole-configmap
           env:
-            - name: FILESERVER_DIRNAME
-              value: "fileserver"
-            - name: UPLOAD_DIRNAME
-              value: "upload"
-            - name: WORK_DIRNAME
-              value: "work"
-            - name: "WORKED_DIR_KEEP_SEC"
-              value: "600"
             - name: "EXEC_NODEPORT_PORT"
               value: "30008"
-            - name: "MY_PORT"
-              value: "80"
-            - name: "EXECUTE_TIMEOUT_SEC"
-              value: "10"
-            - name: "STDOUT_BUFFER_SIZE"
-              value: "1000000"
-            - name: "STDERR_BUFFER_SIZE"
-              value: "1000000"
-            - name: "MAX_UPLOAD_SIZE_MB"
-              value: "300"
-            - name: "PROGRAMS_DIRNAME"
-              value: "programs"
-            - name: TZ
-              value: Asia/Tokyo
+
       volumes:
-        - name: exec2-persistent-storage
+        - name: nfs-pv-storage
           persistentVolumeClaim:
-            claimName: exec2-pv-claim
-
-# fileserverで使用する
-# execのファイルサーバとして使用する。
-# 同じexec podの/root/exec/fileserverは共有される
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: exec2-pv-claim
-  labels:
-    app: exec2
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 20Gi
-
+            claimName: nfs-pvc
 
 # クラスタ外部に公開
 # websiteのjavascriptからPOSTを受けつけるため

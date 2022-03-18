@@ -2,6 +2,20 @@
 
 # current dir is k8s
 
+
+echo "################ nfs server ######################"
+echo "kubectl delete -f nfs-server.yml"
+kubectl delete -f nfs-server.yml
+echo "kubectl apply -f nfs-server.yml"
+kubectl apply -f nfs-server.yml
+
+echo "################ create volume with nfs ################"
+#echo "kubectl delete -f nfs.yml"
+#kubectl delete -f nfs.yml
+echo "kubectl apply -f nfs.yml"
+kubectl apply -f nfs.yml
+
+
 echo "################ config map ######################"
 echo "kubectl delete -f configmap.yml"
 kubectl delete -f configmap.yml

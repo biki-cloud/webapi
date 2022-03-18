@@ -17,3 +17,15 @@ data:
   # 異なるプログラムを持つexecサーバを追加するごとにNodePortを追加し、下記のように
   # ポートを追加する
   K8S_EXEC_NODEPORT_PORTS: "30007,30008"
+
+  # exec podの設定値
+  FILESERVER_DIRNAME: "fileserver"
+  UPLOAD_DIRNAME: "upload"
+  WORK_DIRNAME: "work"
+  WORKED_DIR_KEEP_SEC: "600"
+  EXECUTE_TIMEOUT_SEC: "100"
+  STDOUT_BUFFER_SIZE: "1000000"
+  STDERR_BUFFER_SIZE: "1000000"
+  MAX_UPLOAD_SIZE_MB: "300"
+  PROGRAMS_DIRNAME: "programs"
+  TZ: Asia/Tokyo

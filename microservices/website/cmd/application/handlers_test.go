@@ -6,24 +6,25 @@ import (
 	"net/http/httptest"
 	"testing"
 	"time"
+
 	apigwApp "webapi/microservices/apigw/cmd/application"
-	apigwConfig "webapi/microservices/apigw/env"
+	apigwEnv "webapi/microservices/apigw/env"
 	execApp "webapi/microservices/exec/cmd/application"
-	"webapi/microservices/website/cmd/application"
-	"webapi/microservices/website/env"
-	http2 "webapi/pkg/http/url"
+	websiteApp "webapi/microservices/website/cmd/application"
+	websiteEnv "webapi/microservices/website/env"
+	pkgHttpURL "webapi/pkg/http/url"
 )
 
 var (
-	app *application.Application
+	app *websiteApp.Application
 )
 
 func serversSet() {
-	app = application.New()
+	app = websiteApp.New()
 
 	// serve exec server.
-	for _, url := range apigwConfig.New().ExecServers {
-		port := http2.GetPortFromURL(url)
+	for _, url := range apigwEnv.New().ExecServers {
+		port := pkgHttpURL.GetPortFromURL(url)
 		var done chan error
 		go func() {
 			srv := execApp.NewServer(":"+port, execApp.New())
@@ -40,8 +41,8 @@ func serversSet() {
 	}
 
 	// serve apigw server.
-	for _, url := range env.New().APIGateWayServers {
-		port := http2.GetPortFromURL(url)
+	for _, url := range websiteEnv.New().APIGateWayServers {
+		port := pkgHttpURL.GetPortFromURL(url)
 		var done chan error
 		go func() {
 			srv := apigwApp.NewServer(":"+port, apigwApp.New())

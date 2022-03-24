@@ -7,3 +7,5 @@ COPY apigw /root/apigw
 RUN \
    ls /root/apigw; \
    chmod 755 /root/apigw/apigw;
+
+CMD ["/root/apigw/apigw"]

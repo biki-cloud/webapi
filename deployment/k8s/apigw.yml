@@ -19,7 +19,6 @@ spec:
           image: 192.168.1.12:5010/apigw:v1
           ports:
             - containerPort: 80
-          command: ["/root/apigw/apigw"]
           envFrom:
             - configMapRef:
                 name: whole-configmap

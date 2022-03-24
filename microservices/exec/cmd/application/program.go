@@ -39,7 +39,7 @@ func (app *Application) APIExec(w http.ResponseWriter, r *http.Request) {
 		}
 		app.InfoLog.Printf("err: %v \n", err.Error())
 		out.SetStatus(msgs.SERVERERROR)
-		app.PrintAsJSON(w, out)
+		app.RenderJSON(w, out)
 		return
 	}
 
@@ -54,7 +54,7 @@ func (app *Application) APIExec(w http.ResponseWriter, r *http.Request) {
 	app.InfoLog.Println("---------------------------------------------------")
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	app.PrintAsJSON(w, out)
+	app.RenderJSON(w, out)
 }
 
 // AllHandler は登録されているプログラムの全てをJSONで返す。
@@ -79,5 +79,5 @@ func (app *Application) AllHandler(w http.ResponseWriter, r *http.Request) {
 		m1["help"] = help
 	}
 
-	app.PrintAsJSON(w, m)
+	app.RenderJSON(w, m)
 }

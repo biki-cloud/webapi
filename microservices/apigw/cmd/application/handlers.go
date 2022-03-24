@@ -28,7 +28,7 @@ func (app *Application) GetMinimumMemoryServerHandler(w http.ResponseWriter, r *
 
 	jsonStr := j{Url: url}
 
-	app.PrintAsJSON(w, jsonStr)
+	app.RenderJSON(w, jsonStr)
 }
 
 // GetMinimumMemoryAndHasProgram は実際にプログラムがあるサーバかつ、使用メモリが最小の
@@ -69,7 +69,7 @@ func (app *Application) GetMinimumMemoryAndHasProgram(w http.ResponseWriter, r *
 		jsonStr.Url = url
 	}
 
-	app.PrintAsJSON(w, jsonStr)
+	app.RenderJSON(w, jsonStr)
 }
 
 // mapToStruct はmapからstructに変換する。
@@ -98,7 +98,7 @@ func (app *Application) GetAliveServersHandler(w http.ResponseWriter, r *http.Re
 
 	jsonStr := data{AliveServers: aliveServers}
 
-	app.PrintAsJSON(w, jsonStr)
+	app.RenderJSON(w, jsonStr)
 }
 
 func (app *Application) GetAllProgramsHandler(w http.ResponseWriter, r *http.Request) {
@@ -114,5 +114,5 @@ func (app *Application) GetAllProgramsHandler(w http.ResponseWriter, r *http.Req
 	endPoint := "/program/all"
 	allServerMaps, err = allProgramGetter.Get(aliveServers, endPoint)
 
-	app.PrintAsJSON(w, allServerMaps)
+	app.RenderJSON(w, allServerMaps)
 }

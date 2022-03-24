@@ -16,11 +16,10 @@ spec:
     spec:
       containers:
         - name: website
-          image: website:v1
-          imagePullPolicy: Never
+          image: 192.168.1.12:5010/website:v1
           ports:
             - containerPort: 80
-          command: ["/root/website/website"]
+#          command: ["/root/website/website"]
           envFrom:
             - configMapRef:
                 name: whole-configmap
@@ -31,7 +30,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: website-svc-ex
+  name: website-svc
 spec:
   type: NodePort
   selector:

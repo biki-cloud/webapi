@@ -7,7 +7,7 @@ data:
   # for whole system
   ENV: "k8s"
 
-  K8S_WORKER_NODE_IPS: "192.168.59.101"
+  K8S_WORKER_NODE_IPS: "192.168.59.102"
 
   K8S_WEBSITE_NODEPORT_PORT: "30005"
 
@@ -16,7 +16,7 @@ data:
   # 30007,30008で異なるプログラムが格納してある別のexecサーバとなる。
   # 異なるプログラムを持つexecサーバを追加するごとにNodePortを追加し、下記のように
   # ポートを追加する
-  K8S_EXEC_NODEPORT_PORTS: "30007,30008"
+  K8S_EXEC_NODEPORT_PORTS: "30011,30012"
 
   # exec podの設定値
   FILESERVER_DIRNAME: "fileserver"

@@ -16,9 +16,9 @@ func (app *Application) ServerError(w http.ResponseWriter, err error) {
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 }
 
-// PrintAsJSON webページにJSONを表示する。
+// RenderJSON webページにJSONを表示する。
 // jsonの元になる構造体を渡す。
-func (app *Application) PrintAsJSON(w http.ResponseWriter, jsonStruct interface{}) {
+func (app *Application) RenderJSON(w http.ResponseWriter, jsonStruct interface{}) {
 	// jsonに変換
 	b, err := json.MarshalIndent(jsonStruct, "", "    ")
 	if err != nil {

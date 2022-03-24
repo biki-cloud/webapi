@@ -13,25 +13,25 @@ import (
 )
 
 var (
+	// サーバが起動するポート
 	myPort string
 )
 
 func main() {
 	// k8sの場合は80で固定にし、ローカルの場合は指定できるようにする
-	// ローカルの場合のポートの指定はコマンドラインで行う
+	// ローカルは通常の場合コマンドラインでポートの指定を行う
 	flag.StringVar(&myPort, "port", "80", "server port")
 	flag.Parse()
 	os.Setenv("MY_PORT", myPort)
 
-	cfg := env.New()
+	e := env.New()
 	a := application.New()
 
-	// localでも実行はポートを指定できるが、k8sの場合は80で固定にする
 	var serverURI string
 	if os.Getenv("ENV") == "k8s" {
 		serverURI = ":80"
 	} else {
-		serverURI = ":" + cfg.ProgramServerPort
+		serverURI = ":" + e.ProgramServerPort
 	}
 
 	srv := application.NewServer(serverURI, a)

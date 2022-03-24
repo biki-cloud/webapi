@@ -16,8 +16,7 @@ spec:
     spec:
       containers:
         - name: apigw
-          image: apigw:v1
-          imagePullPolicy: Never
+          image: 192.168.1.12:5010/apigw:v1
           ports:
             - containerPort: 80
           command: ["/root/apigw/apigw"]
@@ -32,7 +31,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: apigw-svc-ex
+  name: apigw-svc
 spec:
   type: NodePort
   selector:

@@ -1,40 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: exec2-deploy
+  name: exec-python2-deploy
   labels:
-    app: exec2
+    app: exec-python2
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: exec2
+      app: exec-python2
   template:
     metadata:
       labels:
-        app: exec2
+        app: exec-python2
     spec:
       containers:
-        - name: exec2
-          image: exec2:v1
-          imagePullPolicy: Never
+        - name: exec-python2
+          image: 192.168.1.12:5010/exec-python:v1
           workingDir: /root/exec
           ports:
             - containerPort: 80
-          volumeMounts:
-            - name: nfs-pv-storage
-              mountPath: /root/exec/fileserver
           envFrom:
             - configMapRef:
                 name: whole-configmap
           env:
             - name: "EXEC_NODEPORT_PORT"
-              value: "30008"
+              value: "30012"
 
-      volumes:
-        - name: nfs-pv-storage
-          persistentVolumeClaim:
-            claimName: nfs-pvc
 
 # クラスタ外部に公開
 # websiteのjavascriptからPOSTを受けつけるため
@@ -43,12 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: exec2-svc-ex
+  name: exec-python2-svc
 spec:
   type: NodePort
   selector:
-    app: exec2
+    app: exec-python2
   ports:
     - port: 80
       targetPort: 80
-      nodePort: 30008
+      nodePort: 30012

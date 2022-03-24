@@ -6,4 +6,6 @@ COPY website /root/website
 
 RUN \
    ls /root/website; \
-   chmod 755 /root/website/website; \
+   chmod 755 /root/website/website;
+
+CMD ["/root/website/website"]

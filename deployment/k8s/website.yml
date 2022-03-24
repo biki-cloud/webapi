@@ -19,7 +19,6 @@ spec:
           image: 192.168.1.12:5010/website:v1
           ports:
             - containerPort: 80
-#          command: ["/root/website/website"]
           envFrom:
             - configMapRef:
                 name: whole-configmap

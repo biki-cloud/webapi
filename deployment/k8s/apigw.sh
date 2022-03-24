@@ -22,8 +22,6 @@ GOOS=linux GOARCH=amd64 go build -o deployment/k8s/apigw-kube/apigw/apigw micros
 
 cd deployment/k8s/apigw-kube
 
-#echo "docker rmi -f 192.168.1.12:5010/apigw:v1"
-#docker rmi -f 192.168.1.12:5010/apigw:v1
 
 # build from Dockerfile
 echo "docker build -t 192.168.1.12:5010/apigw:v1 ."

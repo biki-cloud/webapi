@@ -8,4 +8,4 @@ RUN \
    ls /root/website; \
    chmod 755 /root/website/website;
 
-CMD ["/root/website/website"]
+CMD ["/root/website/website", "-port", "80"]

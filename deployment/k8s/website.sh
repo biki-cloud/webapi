@@ -7,9 +7,6 @@ echo -e "\n\n\n\n\n"
 # ----------- website
 echo "################ website #####################"
 
-echo "kubectl delete -f website.yml"
-kubectl delete -f website.yml
-
 
 # cd to project root
 cd ../..
@@ -25,9 +22,11 @@ cp -r microservices/website/cmd/application/ui deployment/k8s/website-kube/websi
 
 cd deployment/k8s/website-kube
 
+echo "docker rmi 192.168.1.12:5010/website:v1"
+docker rmi 192.168.1.12:5010/website:v1
 
-echo "docker build -t 192.168.1.12:5010/website:v1 ."
-docker build -t 192.168.1.12:5010/website:v1 .
+echo "docker build --no-cache -t 192.168.1.12:5010/website:v1 ."
+docker build --no-cache -t 192.168.1.12:5010/website:v1 .
 
 echo "docker push 192.168.1.12:5010/website:v1"
 docker push 192.168.1.12:5010/website:v1

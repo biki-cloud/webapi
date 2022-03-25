@@ -17,6 +17,6 @@ deployment/k8s/apigw-kube/apigw
 deployment/k8s/exec-python/exec
 deployment/k8s/exec-kube2/exec
 deployment/k8s/website-kube/website
-deployment/local/files
-deployment/local/log/*
+deployment/local/files/
 /deployment/local/log/
+tree.txt

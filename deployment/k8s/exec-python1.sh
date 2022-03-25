@@ -7,8 +7,6 @@ echo "######################### exec-python1 ###########################"
 # pythonコンテナを元にしたexec pod
 # pythonプログラムを持つexec pod
 
-echo "kubectl delete -f exec-python1.yml"
-kubectl delete -f exec-python1.yml
 
 # cd to project root
 cd ../..
@@ -21,12 +19,15 @@ GOOS=linux GOARCH=amd64 go build -o deployment/k8s/exec-python/exec/exec microse
 
 cd deployment/k8s/exec-python
 
-# build from Dockerfile
-echo "docker build -t 192.168.1.12:5010/exec-python:v1"
-docker build -t 192.168.1.12:5010/exec-python:v1 .
+echo "docker rmi 192.168.1.12:5010/exec-python:v1"
+docker rmi 192.168.1.12:5010/exec-python:v1
 
-echo "docker push 192.168.1.12:5010/exec-python:v1"
-docker push 192.168.1.12:5010/exec-python:v1
+# build from Dockerfile
+echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1"
+docker build --no-cache -t 192.168.1.12:5010/exec-python:v1 .
+
+echo "docker push 192.168.1.12:5010/exec-python:v2"
+docker push 192.168.1.12:5010/exec-python:v2
 
 # cd k8s
 cd ..

@@ -8,4 +8,4 @@ RUN \
    ls /root/apigw; \
    chmod 755 /root/apigw/apigw;
 
-CMD ["/root/apigw/apigw"]
+CMD ["/root/apigw/apigw", "-port", "80"]

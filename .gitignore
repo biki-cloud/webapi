@@ -19,3 +19,4 @@ deployment/k8s/exec-kube2/exec
 deployment/k8s/website-kube/website
 deployment/local/files
 deployment/local/log/*
+/deployment/local/log/

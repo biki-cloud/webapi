@@ -135,7 +135,7 @@ func GetMaterials() []Struct {
 			ProgramName:           "sleep",
 			UploadFilePath:        "uploadfile4",
 			UploadFileSize:        200,
-			Parameta:              "10",
+			Parameta:              "110",
 			ExpectedOutFileNames:  []string{},
 			ExpectedStdOutIsEmpty: true,
 			ExpectedStdErrIsEmpty: true,

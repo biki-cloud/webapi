@@ -4,29 +4,42 @@ import (
 	"log"
 	"os"
 	"strconv"
-	os2 "webapi/pkg/os"
-	"webapi/pkg/random"
+
+	pkgOs "webapi/pkg/os"
+	pkgRandom "webapi/pkg/random"
 )
 
 // FileServerConf is relevant fileserver information struct.
 type FileServerConf struct {
-	Dir       string `json:"dir"`
-	UploadDir string `json:"uploadDir"`
-	WorkDir   string `json:"workDir"`
+	// コンテンツ等を格納するファイルサーバのディレクトリ名
+	Dir string
+	// ファイルサーバディレクトリの中に入力ファイルをアップロードさせるためのディレクトリ名
+	UploadDir string
+	// ファイルサーバディレクトリの中に処理ディレクトリなどを一時的に作成し、動作させるが
+	// その一時ディレクトリのルートディレクトリの名前
+	WorkDir string
 }
 
 // Env has all config that are LogConf, FileServerConf,,etc.
 type Env struct {
-	ProgramsDir       string
-	ProgramsJSON      string
-	FileServer        FileServerConf
-	WorkedDirKeepSec  int
-	ProgramServerIP   string
+	// 登録プログラムを入れるためのディレクトリ名
+	ProgramsDir string
+	// コンテンツ等を格納するファイルサーバ等の情報を保持した構造体
+	FileServer FileServerConf
+	// プログラム実行が終了したディレクトリを何秒保持するか
+	WorkedDirKeepSec int
+	// このサーバを立てるIP
+	ProgramServerIP string
+	// このサーバを立てるポート
 	ProgramServerPort string
+	// プログラム実行が始まって何秒経過したらタイムアウトとするか
 	ExecuteTimeoutSec int
-	StdoutBufferSize  int
-	StderrBufferSize  int
-	MaxUploadSizeMB   int64
+	// プログラムの標準出力を何バイト出力するか
+	StdoutBufferSize int
+	// プログラムの標準エラー出力を何バイト出力するか
+	StderrBufferSize int
+	// 入力ファイルサイズの上限を何メガにするか
+	MaxUploadSizeMB int64
 }
 
 // New はconfig.jsonの中身をstructに入れたものを返す
@@ -51,8 +64,8 @@ func New() *Env {
 
 		// K8S_WORKER_NODE_IPSからランダムで設定することによりNODEPORTサービスを利用しているので
 		// outURLsにURLをセットするときにどれかのノードポートにアクセスすればダウンロードできる
-		li := os2.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
-		e.ProgramServerIP = random.Choice(li)
+		li := pkgOs.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
+		e.ProgramServerIP = pkgRandom.Choice(li)
 		e.ProgramServerPort = os.Getenv("EXEC_NODEPORT_PORT")
 
 		n, err = strconv.Atoi(os.Getenv("EXECUTE_TIMEOUT_SEC"))
@@ -80,22 +93,23 @@ func New() *Env {
 		e.MaxUploadSizeMB = int64(n)
 
 	} else {
-		// for local
-		// set environment variable here, if it is not setting
+		// ローカルでの動作の場合はこの環境変数を設定を使用する
+		// 以下の設定は環境変数がセットされていなければセットし、
+		// セットされていれば何もしない
 		m := make(map[string]string)
 		m["FILESERVER_DIRNAME"] = "fileserver"
 		m["UPLOAD_DIRNAME"] = "upload"
 		m["WORK_DIRNAME"] = "work"
 		m["PROGRAMS_DIRNAME"] = "programs"
 		m["WORKED_DIR_KEEP_SEC"] = "600"
-		m["MY_IP"] = os2.GetLocalIP()
-		m["EXECUTE_TIMEOUT_SEC"] = "10"
+		m["MY_IP"] = pkgOs.GetLocalIP()
+		m["EXECUTE_TIMEOUT_SEC"] = "100"
 		m["STDOUT_BUFFER_SIZE"] = "1000000"
 		m["STDERR_BUFFER_SIZE"] = "1000000"
 		m["MAX_UPLOAD_SIZE_MB"] = "300"
 
 		for k, v := range m {
-			err := os2.SetEnvIfNotExists(k, v)
+			err := pkgOs.SetEnvIfNotExists(k, v)
 			if err != nil {
 				log.Fatalf("New: %v", err.Error())
 			}

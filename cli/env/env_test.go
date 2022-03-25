@@ -1,15 +1,15 @@
 package env_test
 
 import (
+	"os"
 	"reflect"
 	"testing"
 
 	"webapi/cli/env"
-	pkgOs "webapi/pkg/os"
 )
 
 func TestNewEnv(t *testing.T) {
-	err := pkgOs.SetEnvIfNotExists("APIGW_SERVER_URIS", "http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003")
+	err := os.Setenv("APIGW_SERVER_URIS", "http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003")
 	if err != nil {
 		t.Fatalf("Err: %v \n", err.Error())
 	}

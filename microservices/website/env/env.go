@@ -7,11 +7,13 @@ package env
 import (
 	"log"
 	"os"
+
 	pkgOs "webapi/pkg/os"
-	"webapi/pkg/random"
+	pkgRandom "webapi/pkg/random"
 )
 
 type Env struct {
+	// APIGateWayServers eg -> ["http://192.168.59.101:30007,http://192.168.59.101:30008"]
 	APIGateWayServers []string
 	// ExecServers eg -> ["http://192.168.59.101:30007,http://192.168.59.101:30008"]
 	ExecServers []string
@@ -27,7 +29,7 @@ func New() *Env {
 		// k8sの場合はExecサービスがノードポートごとに異なる
 		// かつノードの３台の中からランダムなIPにアクセスする必要がある。
 		workerNodeIPs := pkgOs.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
-		workerNodeIP := random.Choice(workerNodeIPs)
+		workerNodeIP := pkgRandom.Choice(workerNodeIPs)
 
 		// それぞれ別のexecサーバにアクセスするようにURIを作成する。
 		execNodePortPorts := pkgOs.ListEnvToSlice(os.Getenv("K8S_EXEC_NODEPORT_PORTS"))
@@ -41,8 +43,9 @@ func New() *Env {
 		e.APIGateWayServers = []string{"http://" + workerNodeIP + ":" + os.Getenv("K8S_APIGW_NODEPORT_PORT")}
 
 	} else {
-		// for local
-		// set environment variable here, if it is not setting
+		// ローカルでの動作の場合はこの環境変数を設定を使用する
+		// 以下の設定は環境変数がセットされていなければセットし、
+		// セットされていれば何もしない
 		m := make(map[string]string)
 		// 実際に動作させる際は環境変数を設定しなければならない
 		localIP := pkgOs.GetLocalIP()

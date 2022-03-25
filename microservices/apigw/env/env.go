@@ -7,8 +7,9 @@ package env
 import (
 	"log"
 	"os"
+
 	pkgOs "webapi/pkg/os"
-	"webapi/pkg/random"
+	pkgRandom "webapi/pkg/random"
 )
 
 type Env struct {
@@ -30,7 +31,7 @@ func New() *Env {
 
 		// ワーカーノード３台の中から一台を選択
 		workerNodeIPs := pkgOs.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
-		workerNodeIP := random.Choice(workerNodeIPs)
+		workerNodeIP := pkgRandom.Choice(workerNodeIPs)
 
 		// それぞれ別のexecサーバにアクセスするようにURIを作成する。
 		execNodePortPorts := pkgOs.ListEnvToSlice(os.Getenv("K8S_EXEC_NODEPORT_PORTS"))
@@ -40,7 +41,6 @@ func New() *Env {
 			execServers = append(execServers, uri)
 		}
 		e.ExecServers = execServers
-		//e.ExecServers = pkgOs.ListEnvToSlice(os.Getenv("K8S_EXEC_NODEPORT_URIS"))
 
 		e.GateWayServerPort = os.Getenv("K8S_APIGW_POD_PORT")
 
@@ -49,6 +49,7 @@ func New() *Env {
 		m := make(map[string]string)
 
 		// 実際に動作させる際は環境変数を設定しなければならない
+		// 下記の設定はテスト用
 		localIP := pkgOs.GetLocalIP()
 		m["LOCAL_EXEC_SERVERS"] = "http://" + localIP + ":9001,http://" + localIP + ":9002,http://" + localIP + ":9003"
 

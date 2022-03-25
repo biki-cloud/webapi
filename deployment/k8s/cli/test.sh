@@ -1,8 +1,12 @@
 #!/bin/zsh
 
 echo "########## exec ############"
-echo "./cli -name toJson_p -i input.txt -o ooooooo -l -j"
-./cli -name toJson_p -i input.txt -o ooooooo -l -j
+
+echo "export APIGW_SERVER_URIS=http://192.168.59.102:30006"
+export APIGW_SERVER_URIS=http://192.168.59.102:30006
+
+echo "./cli -name toJson -i input.txt -o ooooooo -l -j"
+./cli -name toJson -i input.txt -o ooooooo -l -j
 
 
 echo ""

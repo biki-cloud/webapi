@@ -3,12 +3,11 @@ WebAPIのコマンドラインツールとして動作するプログラム
 
 処理の流れ
 
-１、同じディレクトリのconfig.jsonを読み込み、APIゲートウェイサーバ数台の中で生きているサーバかつ消費メモリが一番少ないサーバを選択する。
+１、APIゲートウェイサーバ数台の中で生きているサーバかつ消費メモリが一番少ないサーバを選択する。
 
-２、１で選択したAPIゲートウェイサーバに入力されたプログラム名でアクセスし、プログラムサーバの中でプログラム名を保持しているかつ消費メモリが一番少ないプログラムサーバ
-を選択する。
+２、１で選択したAPIゲートウェイサーバに入力されたプログラム名でアクセスし、execサーバの中でプログラム名を保持しているかつ消費メモリが一番少ないexecサーバを選択する。
 
-３、２で選択したプログラムサーバに入力されたファイルを処理させる。処理させた後は入力された出力ディレクトリに出力する。
+３、２で選択したexecサーバに入力されたファイルを処理させる。処理させた後は入力された出力ディレクトリに出力する。
 */
 
 package main
@@ -21,20 +20,25 @@ import (
 	"os"
 	"strconv"
 	"sync"
+
+	"webapi/cli/env"
 	"webapi/cli/pkg/download"
 	"webapi/cli/pkg/post"
 	"webapi/cli/pkg/selectServer"
-	mg "webapi/microservices/apigw/pkg/memoryGetter"
+	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
 	"webapi/microservices/apigw/pkg/serverAliveConfirmer"
-	log2 "webapi/pkg/log"
-	os2 "webapi/pkg/os"
-
-	"webapi/cli/config"
+	pkgLog "webapi/pkg/log"
+	pkgOs "webapi/pkg/os"
 )
 
 func main() {
-	cfg := config.New()
+	// 環境変数APIGW_SERVER_URISがセットされていなければデフォルトの値をセットする
+	err := pkgOs.SetEnvIfNotExists("APIGW_SERVER_URIS", "http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003")
+	if err != nil {
+		log.Fatalf("Err: %v \n", err.Error())
+	}
+	e := env.New()
 
 	var (
 		proName               string
@@ -45,35 +49,41 @@ func main() {
 		outJSONFLAG           bool
 		displayAllProgramFlag bool
 	)
-	flag.StringVar(&proName, "name", "", "(required) 登録プログラムの名称を入れてください。(必須) 登録されているプログラムは-aで参照できます。例 -> -name convertToJson")
-	flag.StringVar(&inputFile, "i", "", "(required) 登録プログラムに処理させる入力ファイルのパスを指定してください。(必須) 例 -> -i ./input/test.txt")
-	flag.StringVar(&outputDir, "o", "", "(required) 登録プログラムの出力ファイルを出力するディレクトリを指定してください。(必須) 例 -> -o ./proOut")
-	parametaUsage := "(option) 登録プログラムに使用するパラメータを指定してください。例 -> -post " + strconv.Quote("-name mike")
+	flag.StringVar(&proName, "name", "", "(required) 登録プログラムの名称を入れてください。 登録されているプログラムは-aで参照できます。例 -> -name convertToJson")
+	flag.StringVar(&inputFile, "i", "", "(required) 登録プログラムに処理させる入力ファイルのパスを指定してください。 例 -> -i ./input/test.txt")
+	flag.StringVar(&outputDir, "o", "", "(required) 登録プログラムの出力ファイルを出力するディレクトリを指定してください。 例 -> -o ./proOut")
+	parametaUsage := "(option) 登録プログラムに渡すパラメータを指定してください。例 -> -p " + strconv.Quote("-name mike")
 	flag.StringVar(&parameta, "p", "", parametaUsage)
 	flag.BoolVar(&LogFlag, "l", false, "(option) -lを付与すると詳細なログを出力します。通常は使用しません。")
 	flag.BoolVar(&displayAllProgramFlag, "a", false, fmt.Sprintf("(option) -aを付与するとwebサーバに登録されているプログラムのリストを表示します。使用例 -> %s -a", flag.CommandLine.Name()))
 	jsonExample := `
 	{
-		"status": "program timeout or program error or exec error or ok",
-		"programsJSON": "作成プログラムの標準出力",
-		"stderr": "作成プログラムの標準エラー出力",
-		"outURLs": [作成プログラムの出力ファイルのURLのリスト(この値は気にしなくて大丈夫です。)],
-		"errmsg": "サーバ内のプログラムで起きたエラーメッセージ"
+	  "status": "program timeout or program error or exec error or ok",
+	  "programsJSON": "作成プログラムの標準出力",
+	  "stderr": "作成プログラムの標準エラー出力",
+	  "outURLs": [作成プログラムの出力ファイルのURLのリスト(この値は気にしなくて大丈夫です。)],
+	  "errmsg": "サーバ内のプログラムで起きたエラーメッセージ"
 	}
 	statusの各項目
 	program timeout -> 登録プログラムがサーバー内で実行された際にタイムアウトになった場合
 	program error   -> 登録プログラムがサーバー内で実行された際にエラーになった場合
-	exec error    -> サーバー内のプログラムがエラーを起こした場合
+	server error    -> サーバー内のプログラムがエラーを起こした場合
 	ok              -> エラーを起こさなかった場合
 	`
 	flag.BoolVar(&outJSONFLAG, "j", false, "(option, but recommend) -j を付与するとコマンド結果の出力がJSON形式になり、次のように出力します。"+jsonExample)
 
 	flag.CommandLine.Usage = func() {
 		o := flag.CommandLine.Output()
-		fmt.Fprintf(o, "\nUsage: %s -name <プログラム名> -i <入力ファイル> -o <出力ディレクトリ>\n", flag.CommandLine.Name())
-		fmt.Fprintf(o, "\nDescription: プログラムサーバに登録してあるプログラムを起動し、サーバ上で処理させ出力を返す。\nAPIゲートウェイサーバのアドレスはカレントディレクトリのconfig.jsonに記述してください。 \n 例:%s -name convertToJson -i test.txt -o out -post %v\n \n\nOptions:\n", flag.CommandLine.Name(), strconv.Quote("-s ss -d dd"))
+		fmt.Fprintf(o, "\nUsage: \n  %s <option> -name <プログラム名> -i <入力ファイル> -o <出力ディレクトリ>\n", flag.CommandLine.Name())
+		fmt.Fprintf(o, "\n\n"+
+			"Description:  \n  "+
+			"プログラムサーバに登録してあるプログラムを起動し、サーバ上で処理させ出力を返す。\n\n  "+
+			"実行する前にAPIゲートウェイサーバのアドレスを環境変数にセットしてください。値は環境に応じて変更してください。\n  "+
+			"Linux  : export APIGW_SERVER_URIS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n  "+
+			"Windows: SET APIGW_SERVER_URIS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n\n  "+
+			"実行例: %s -name convertToJson -i test.txt -o out -p %v\n \n\nOptions:\n", flag.CommandLine.Name(), strconv.Quote("<パラメータ１><パラメータ2>"))
 		flag.PrintDefaults()
-		fmt.Fprintf(o, "\nUpdated date 2022.01.12 by morituka. \n\n")
+		fmt.Fprintf(o, "\nUpdated date 2022.3.25 by morituka. \n\n")
 	}
 	flag.Parse()
 
@@ -88,23 +98,23 @@ func main() {
 
 	// ロガーフラグがない場合はログを出さない
 	if !LogFlag {
-		logger.SetOutput(new(log2.NullWriter))
+		logger.SetOutput(new(pkgLog.NullWriter))
 	}
 
 	// config.jsonのAPIゲートウェイサーバからメモリ消費が一番少ないサーバを選択する。
 	// 生きているサーバのリストを取得
 	confirmer := serverAliveConfirmer.New()
-	aliveServers, err := serverAliveConfirmer.GetAliveServers(cfg.APIGateWayServers, "/health", confirmer)
+	aliveServers, err := serverAliveConfirmer.GetAliveServers(e.APIGWServerURIs, "/health", confirmer)
 	if len(aliveServers) == 0 {
 		log.Fatalln("生きているAPIゲートウェイサーバはありませんでした。")
 	}
-	memoryGetter := mg.New()
+	mg := memoryGetter.New()
 	if err != nil {
 		log.Fatalf("err: %v \n", err)
 	}
 
 	// 生きているサーバにアクセスしていき、メモリ状況を取得、一番消費メモリが少ないサーバを取得する
-	serverMemoryMap, err := minimumServerSelector.GetServerMemoryMap(aliveServers, "/health/memory", memoryGetter)
+	serverMemoryMap, err := minimumServerSelector.GetServerMemoryMap(aliveServers, "/health/memory", mg)
 	if err != nil {
 		log.Fatalf("APIゲートウェイサーバにてエラーが発生しました。err: %v\n", err)
 	}
@@ -117,7 +127,7 @@ func main() {
 
 	// 全てのプログラム情報を取得する。allProgramInfoはjsonで出力される。
 	command := fmt.Sprintf("curl %v/program-server/program/all", apiGateWayServerAddr)
-	programsJSON, stderr, err := os2.SimpleExec(command)
+	programsJSON, stderr, err := pkgOs.SimpleExec(command)
 	if err != nil || programsJSON == "" {
 		fmt.Printf("err from SimpleExec(command: %v), err msg: %v. stderr: %v, \n", command, err.Error(), stderr)
 		os.Exit(1)
@@ -144,7 +154,7 @@ func main() {
 	}
 
 	// 入力ファイル存在確認
-	if !os2.FileExists(inputFile) {
+	if !pkgOs.FileExists(inputFile) {
 		fmt.Printf("no such file or directory: %v\n", inputFile)
 		os.Exit(1)
 	}
@@ -218,7 +228,7 @@ func main() {
 	var wg sync.WaitGroup
 	for _, getOutFileURL := range res.OutURLs() {
 		wg.Add(1) // ゴルーチン起動のたびにインクリメント
-		go downloader.Download(getOutFileURL, outputDir, done, &wg, os2.NewMover())
+		go downloader.Download(getOutFileURL, outputDir, done, &wg, pkgOs.NewMover())
 	}
 	wg.Wait()   // ゴルーチンでAddしたものが全てDoneされたら次に処理がいく
 	close(done) // ゴルーチンが全て終了したのでチャネルをクローズする。

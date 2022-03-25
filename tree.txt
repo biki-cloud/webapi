@@ -7,7 +7,7 @@
 │   │       └── main
 │   │           ├── main.go
 │   │           └── main_test.go
-│   ├── config
+│   ├── Env
 │   │   ├── cli_config.go
 │   │   ├── cli_config.json
 │   │   └── cli_config_test.go
@@ -32,7 +32,7 @@
 │   │   │   ├── Dockerfile
 │   │   │   └── apigw
 │   │   │       ├── apigw
-│   │   │       ├── config.json
+│   │   │       ├── Env.json
 │   │   │       ├── log.txt
 │   │   │       ├── static
 │   │   │       │   ├── css
@@ -58,29 +58,29 @@
 │   │   ├── exec-kube1
 │   │   │   ├── Dockerfile
 │   │   │   └── exec
-│   │   │       ├── config
-│   │   │       │   ├── config.json
+│   │   │       ├── Env
+│   │   │       │   ├── Env.json
 │   │   │       │   └── programConfig.json
 │   │   │       ├── exec
 │   │   │       ├── fileserver
 │   │   │       │   └── upload
 │   │   │       └── programs
 │   │   │           └── convertToJson
-│   │   │               ├── config.json
+│   │   │               ├── Env.json
 │   │   │               ├── convert_json.py
 │   │   │               └── help.txt
 │   │   ├── exec-kube2
 │   │   │   ├── Dockerfile
 │   │   │   └── exec
-│   │   │       ├── config
-│   │   │       │   ├── config.json
+│   │   │       ├── Env
+│   │   │       │   ├── Env.json
 │   │   │       │   └── programConfig.json
 │   │   │       ├── exec
 │   │   │       ├── fileserver
 │   │   │       │   └── upload
 │   │   │       └── programs
 │   │   │           └── convertToJson
-│   │   │               ├── config.json
+│   │   │               ├── Env.json
 │   │   │               ├── convert_json.py
 │   │   │               └── help.txt
 │   │   ├── exec1.yml
@@ -121,7 +121,7 @@
 │       │   │   ├── input.txt
 │       │   │   └── test.sh
 │       │   ├── exec1
-│       │   │   ├── config
+│       │   │   ├── Env
 │       │   │   │   └── programConfig.json
 │       │   │   ├── exec
 │       │   │   ├── fileserver
@@ -145,11 +145,11 @@
 │       │   │   │               └── test.txt
 │       │   │   └── programs
 │       │   │       └── convertToJson
-│       │   │           ├── config.json
+│       │   │           ├── Env.json
 │       │   │           ├── convert_json.py
 │       │   │           └── help.txt
 │       │   ├── exec2
-│       │   │   ├── config
+│       │   │   ├── Env
 │       │   │   │   └── programConfig.json
 │       │   │   ├── exec
 │       │   │   ├── fileserver
@@ -162,15 +162,15 @@
 │       │   │   │               └── test.txt
 │       │   │   └── programs
 │       │   │       ├── convertToJson
-│       │   │       │   ├── config.json
+│       │   │       │   ├── Env.json
 │       │   │       │   ├── convert_json.py
 │       │   │       │   └── help.txt
 │       │   │       ├── err
-│       │   │       │   ├── config.json
+│       │   │       │   ├── Env.json
 │       │   │       │   ├── convert_json.py
 │       │   │       │   └── help.txt
 │       │   │       └── sleep
-│       │   │           ├── config.json
+│       │   │           ├── Env.json
 │       │   │           ├── convert_json.py
 │       │   │           └── help.txt
 │       │   └── website1
@@ -222,7 +222,7 @@
 │   │   │       ├── router.go
 │   │   │       └── server.go
 │   │   ├── env
-│   │   │   ├── config.json
+│   │   │   ├── Env.json
 │   │   │   └── env.go
 │   │   └── pkg
 │   │       ├── getAllPrograms
@@ -254,26 +254,26 @@
 │   │   │       ├── server.go
 │   │   │       ├── uploadHandler.go
 │   │   │       └── uploadHandler_test.go
-│   │   ├── config
-│   │   │   ├── config
-│   │   │   │   ├── config.json
+│   │   ├── Env
+│   │   │   ├── Env
+│   │   │   │   ├── Env.json
 │   │   │   │   ├── programConfig.json
 │   │   │   │   └── programConfig_test.json
 │   │   │   ├── programConf.go
 │   │   │   ├── programConf_test.go
 │   │   │   └── programs
 │   │   │       ├── convertToJson
-│   │   │       │   ├── config.json
+│   │   │       │   ├── Env.json
 │   │   │       │   ├── convert_json.py
 │   │   │       │   └── help.txt
 │   │   │       ├── err
-│   │   │       │   ├── config.json
+│   │   │       │   ├── Env.json
 │   │   │       │   ├── convert_json.py
 │   │   │       │   └── help.txt
 │   │   │       ├── move
 │   │   │       │   └── help.txt
 │   │   │       └── sleep
-│   │   │           ├── config.json
+│   │   │           ├── Env.json
 │   │   │           ├── convert_json.py
 │   │   │           └── help.txt
 │   │   ├── env

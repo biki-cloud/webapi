@@ -68,7 +68,7 @@ web
 ６、登録プログラムがエラーを起こした場合
 {
   "outURLs": [],
-  "stdout": "['/Users/hibiki/go/src/webapi/build/server1/programs/convertToJson/convert_json.py', 'fileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/test.txt', 'fileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/out', '/Users/hibiki/go/src/webapi/build/server1/programs/convertToJson/config.json', 'ok,', '', 'dummy']\nfileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/test.txt\nfileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/out\nprocess start\nprocess end\n",
+  "stdout": "['/Users/hibiki/go/src/webapi/build/server1/programs/convertToJson/convert_json.py', 'fileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/test.txt', 'fileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/out', '/Users/hibiki/go/src/webapi/build/server1/programs/convertToJson/Env.json', 'ok,', '', 'dummy']\nfileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/test.txt\nfileserver/programOut/toJson/2022-01-17-06-34-37-xJRaxFpcmVjBIoWS65wq/out\nprocess start\nprocess end\n",
   "stderr": "Traceback (most recent call last):\n  File \"/Users/hibiki/go/src/webapi/build/server1/programs/convertToJson/convert_json.py\", line 16, in \u003cmodule\u003e\n    raise BaseException(\"python is error\")\nBaseException: python is error\n",
   "status": "program error",
   "errmsg": "Exec: exit status 1 "

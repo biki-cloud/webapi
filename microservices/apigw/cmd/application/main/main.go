@@ -15,7 +15,7 @@ var (
 func main() {
 	// k8sの場合は80で固定にし、ローカルの場合は指定できるようにする
 	// ローカルの場合のポートの指定はコマンドラインで行う
-	flag.StringVar(&myPort, "port", "80", "server port")
+	flag.StringVar(&myPort, "port", "80", "サーバが起動するポートを指定")
 	flag.CommandLine.Usage = func() {
 		o := flag.CommandLine.Output()
 		fmt.Fprintf(o, "\nUsage: \n  %s -port <サーバを起動させるポート番号> \n", flag.CommandLine.Name())

@@ -58,8 +58,8 @@ func main() {
 	flag.BoolVar(&displayAllProgramFlag, "a", false, fmt.Sprintf("(option) -aを付与するとwebサーバに登録されているプログラムのリストを表示します。使用例 -> %s -a", flag.CommandLine.Name()))
 	jsonExample := `
 	{
-	  "status": "program timeout or program error or exec error or ok",
-	  "programsJSON": "作成プログラムの標準出力",
+	  "status": "program timeout or program error or server error or ok",
+	  "stdout": "作成プログラムの標準出力",
 	  "stderr": "作成プログラムの標準エラー出力",
 	  "outURLs": [作成プログラムの出力ファイルのURLのリスト(この値は気にしなくて大丈夫です。)],
 	  "errmsg": "サーバ内のプログラムで起きたエラーメッセージ"
@@ -77,11 +77,28 @@ func main() {
 		fmt.Fprintf(o, "\nUsage: \n  %s <option> -name <プログラム名> -i <入力ファイル> -o <出力ディレクトリ>\n", flag.CommandLine.Name())
 		fmt.Fprintf(o, "\n\n"+
 			"Description:  \n  "+
-			"プログラムサーバに登録してあるプログラムを起動し、サーバ上で処理させ出力を返す。\n\n  "+
-			"実行する前にAPIゲートウェイサーバのアドレスを環境変数にセットしてください。値は環境に応じて変更してください。\n  "+
+			"プログラムサーバに登録してあるプログラムを起動し、サーバ上で処理させ出力を返す。\n  "+
+			"サーバで処理され、出力されたファイルは-oで指定した出力ディレクトリに出力されます。\n  "+
+			"-oで指定する出力ディレクトリは存在しなければ作成されます。\n  "+
+			"\n  実行する前にAPIゲートウェイサーバのアドレスを環境変数にセットしてください。値は環境に応じて変更してください。\n  "+
 			"Linux  : export APIGW_SERVER_URIS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n  "+
-			"Windows: SET APIGW_SERVER_URIS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n\n  "+
-			"実行例: %s -name convertToJson -i test.txt -o out -p %v\n \n\nOptions:\n", flag.CommandLine.Name(), strconv.Quote("<パラメータ１><パラメータ2>"))
+			"Windows: SET APIGW_SERVER_URIS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n\n  ")
+		fmt.Fprintf(o, " \n"+
+			"Examples: \n")
+		fmt.Fprintf(o,
+			"# 一番シンプルな実行方法 \n  "+
+				"%s -name <プログラム名> -i <入力ファイル> -o <出力ファイル> \n  ", flag.CommandLine.Name())
+		fmt.Fprintf(o, " \n"+
+			"# パラメータを付加させる場合, -pの後の文字列をダブルクォーテーションで囲む必要がある。中の文字列の構成は登録プログラムの仕様に依存する。 \n  "+
+			"%s -name <プログラム名> -i <入力ファイル> -o <出力ファイル> -p \"<パラメータ１,パラメータ２>\" \n  ", flag.CommandLine.Name())
+		fmt.Fprintf(o, " \n"+
+			"# 実行結果をJSONで受け取る場合 \n  "+
+			"%s -j -name <プログラム名> -i <入力ファイル> -o <出力ファイル> \n", flag.CommandLine.Name())
+		fmt.Fprintf(o, " \n"+
+			"# プログラムの処理過程を表示しながら実行する場合 \n  "+
+			"%s -l -name <プログラム名> -i <入力ファイル> -o <出力ファイル> \n", flag.CommandLine.Name())
+		fmt.Fprintf(o, "\n")
+		fmt.Fprintf(o, "\nOptions: \n")
 		flag.PrintDefaults()
 		fmt.Fprintf(o, "\nUpdated date 2022.3.25 by morituka. \n\n")
 	}

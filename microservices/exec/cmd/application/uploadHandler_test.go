@@ -5,9 +5,10 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
 	"webapi/microservices/exec/env"
-	http2 "webapi/pkg/http/request"
-	uf "webapi/pkg/os"
+	pkgHttpRequest "webapi/pkg/http/request"
+	pkgOs "webapi/pkg/os"
 )
 
 func TestUploadHandler(t *testing.T) {
@@ -35,7 +36,7 @@ func TestUploadHandler(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		err := uf.CreateSpecifiedFile(tt.fileName, tt.fileSize)
+		err := pkgOs.CreateSpecifiedFile(tt.fileName, tt.fileSize)
 		if err != nil {
 			t.Fatalf(err.Error())
 		}
@@ -48,7 +49,7 @@ func TestUploadHandler(t *testing.T) {
 }
 
 func testUpload(t *testing.T, uploadIsSuccess bool, uploadFile string, cfg *env.Env) {
-	postGetter := http2.NewPostGetter()
+	postGetter := pkgHttpRequest.NewPostGetter()
 	r, err := postGetter.GetPostRequest("/upload", uploadFile, map[string]string{"dummy": "x"})
 	if err != nil {
 		t.Fatalf(err.Error())
@@ -60,8 +61,8 @@ func testUpload(t *testing.T, uploadIsSuccess bool, uploadFile string, cfg *env.
 
 	// アップロードされているか
 	uploadedPath := filepath.Join(cfg.FileServer.Dir, "upload", uploadFile)
-	if uf.FileExists(uploadedPath) != uploadIsSuccess {
-		t.Errorf("got: %v, want: %v", uf.FileExists(uploadedPath), uploadIsSuccess)
+	if pkgOs.FileExists(uploadedPath) != uploadIsSuccess {
+		t.Errorf("got: %v, want: %v", pkgOs.FileExists(uploadedPath), uploadIsSuccess)
 	}
 
 	t.Cleanup(func() {

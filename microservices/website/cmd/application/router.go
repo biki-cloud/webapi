@@ -3,7 +3,8 @@ package application
 import (
 	"net/http"
 	"path/filepath"
-	"webapi/pkg/os"
+
+	pkgOs "webapi/pkg/os"
 )
 
 func (app *Application) Routes() *http.ServeMux {
@@ -14,7 +15,7 @@ func (app *Application) Routes() *http.ServeMux {
 
 	router.HandleFunc("/user/exec/", app.Exec)
 
-	currentDir, err := os.GetCurrentDir()
+	currentDir, err := pkgOs.GetCurrentDir()
 	if err != nil {
 		panic(err.Error())
 	}

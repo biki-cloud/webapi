@@ -3,17 +3,7 @@
     {
       "name": "convertToJson",
       "command": "python3 programs\\convertToJson/convert_json.py INPUTFILE OUTPUTDIR programs/convertToJson/config.json PARAMETA",
-      "helpPath": "programs/convertToJson/help.txt",
-      "test": {
-        "inputfile": "programs/convertToJson/test.txt",
-        "parameta": "",
-        "outFiles": [
-          {
-            "filename": "test.txt.json1",
-            "sizeKB": "20"
-          }
-        ]
-      }
+      "helpPath": "programs/convertToJson/help.txt"
     },
     {
       "name": "sleep",

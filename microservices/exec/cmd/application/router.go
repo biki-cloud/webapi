@@ -6,7 +6,8 @@ package application
 
 import (
 	"net/http"
-	http2 "webapi/pkg/http/handlers"
+
+	pkgHttpHandlers "webapi/pkg/http/handlers"
 )
 
 // Routes ハンドラをセットしたrouterを返す。
@@ -25,13 +26,13 @@ func (app *Application) Routes() *http.ServeMux {
 	r.HandleFunc("/api/upload", app.APIUpload)
 
 	// このサーバプログラムのメモリ状態をJSONで表示するAPI
-	r.HandleFunc("/health/memory", http2.GetRuntimeHandler)
+	r.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
 
 	// プログラムサーバに登録してあるプログラム一覧をJSONで表示するAPI
 	r.HandleFunc("/program/all", app.AllHandler)
 
 	// このサーバが生きているかを判断するのに使用するハンドラ
-	r.HandleFunc("/health", http2.HealthHandler)
+	r.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
 	return r
 }

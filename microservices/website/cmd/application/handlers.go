@@ -8,11 +8,12 @@ import (
 	"net/http"
 	"path/filepath"
 	"sort"
-	mg "webapi/microservices/apigw/pkg/memoryGetter"
+
+	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
-	gp "webapi/microservices/apigw/pkg/programHasServers"
+	"webapi/microservices/apigw/pkg/programHasServers"
 	"webapi/microservices/apigw/pkg/serverAliveConfirmer"
-	"webapi/pkg/os"
+	pkgOs "webapi/pkg/os"
 )
 
 // mapToStruct はmapからstructに変換する。
@@ -44,9 +45,9 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 		app.ServerError(w, err)
 	}
 
-	memoryGetter := mg.New()
+	mg := memoryGetter.New()
 	// 生きているサーバにアクセスしていき、メモリ状況を取得、一番消費メモリが少ないサーバを取得する
-	serverMemoryMap, err := minimumServerSelector.GetServerMemoryMap(apigwServers, "/health/memory", memoryGetter)
+	serverMemoryMap, err := minimumServerSelector.GetServerMemoryMap(apigwServers, "/health/memory", mg)
 	if err != nil {
 		log.Fatalf("APIゲートウェイサーバにてエラーが発生しました。err: %v\n", err)
 	}
@@ -57,7 +58,7 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 
 	// 登録プログラムの情報を取得する
 	command := fmt.Sprintf("curl %v/program-server/program/all", apigwAddr)
-	programsJSON, stderr, err := os.SimpleExec(command)
+	programsJSON, stderr, err := pkgOs.SimpleExec(command)
 	if err != nil || programsJSON == "" {
 		app.ServerError(w, fmt.Errorf("err: %v, stderr: %v", err.Error(), stderr))
 	}
@@ -116,17 +117,17 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 			app.ServerError(w, err)
 		}
 
-		programHasServersGetter := gp.New()
-		programHasServers, err := programHasServersGetter.Get(t.AliveExecServers, "/program/all", proName)
+		pg := programHasServers.New()
+		phs, err := pg.Get(t.AliveExecServers, "/program/all", proName)
 		if err != nil {
 			app.ServerError(w, err)
 		}
 
 		// プログラムを保持しているサーバたちの中で一番使用メモリが少ないサーバを選択する。
-		minimumMemoryServerSelector := minimumServerSelector.New()
-		memoryGetter := mg.New()
-		sc := serverAliveConfirmer.New()
-		url, err := minimumMemoryServerSelector.Select(programHasServers, sc, memoryGetter, "/health/memory", "/health")
+		mmss := minimumServerSelector.New()
+		mg := memoryGetter.New()
+		sac := serverAliveConfirmer.New()
+		url, err := mmss.Select(phs, sac, mg, "/health/memory", "/health")
 		if err != nil {
 			app.ServerError(w, err)
 		}
@@ -141,7 +142,7 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Add("Content-Type", "text/html")
-	currentDir, err := os.GetCurrentDir()
+	currentDir, err := pkgOs.GetCurrentDir()
 	serveHtml := filepath.Join(currentDir, "ui/html", "top.html")
 	absHtml, err := filepath.Abs(serveHtml)
 	if err != nil {
@@ -156,7 +157,7 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 
 func (app *Application) Exec(w http.ResponseWriter, r *http.Request) {
 
-	currentDir, err := os.GetCurrentDir()
+	currentDir, err := pkgOs.GetCurrentDir()
 	if err != nil {
 		app.ServerError(w, err)
 	}

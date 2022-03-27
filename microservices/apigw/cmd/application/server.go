@@ -2,11 +2,12 @@ package application
 
 import (
 	"net/http"
-	"webapi/pkg/http/middlewares"
+
+	pkgHttpMiddlewares "webapi/pkg/http/middlewares"
 )
 
 func NewServer(serverURI string, app *Application) *http.Server {
-	handler := middlewares.HttpTrace(app.Routes(), app.InfoLog)
+	handler := pkgHttpMiddlewares.HttpTrace(app.Routes(), app.InfoLog)
 
 	srv := &http.Server{
 		Addr:     serverURI,

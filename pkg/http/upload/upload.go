@@ -9,10 +9,11 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	msg "webapi/microservices/exec/pkg/msgs"
-	"webapi/pkg/int"
-	utils2 "webapi/pkg/os"
-	utilString "webapi/pkg/string"
+
+	"webapi/microservices/exec/pkg/msgs"
+	pkgInt "webapi/pkg/int"
+	pkgOs "webapi/pkg/os"
+	pkgString "webapi/pkg/string"
 )
 
 var FileSizeTooBigError = errors.New("upload file size is too big.")
@@ -28,7 +29,7 @@ func UploadHelper(w http.ResponseWriter, r *http.Request, uploadDir string, maxU
 
 	r.Body = http.MaxBytesReader(w, r.Body, maxUploadSizeByte)
 	if err := r.ParseMultipartForm(maxUploadSizeByte); err != nil {
-		return "", fmt.Errorf("%w, file size: %v", FileSizeTooBigError, msg.UploadFileSizeExceedError(int.ByteToMB(maxUploadSizeByte)))
+		return "", fmt.Errorf("%w, file size: %v", FileSizeTooBigError, msgs.UploadFileSizeExceedError(pkgInt.ByteToMB(maxUploadSizeByte)))
 	}
 
 	//FormFileの引数はHTML内のform要素のnameと一致している必要があります
@@ -53,7 +54,7 @@ func UploadHelper(w http.ResponseWriter, r *http.Request, uploadDir string, maxU
 
 	// 保存用ディレクトリ内に新しいファイルを作成します。
 	// アップロードファイルに半角や全角のスペースがある場合は削除する。
-	spaceRemovedUploadFileName := utilString.RemoveSpace(fileHeader.Filename)
+	spaceRemovedUploadFileName := pkgString.RemoveSpace(fileHeader.Filename)
 	uploadFilePath := filepath.Join(uploadDir, spaceRemovedUploadFileName)
 	dst, err := os.Create(uploadFilePath)
 	if err != nil {
@@ -93,7 +94,7 @@ type uploader struct{}
 // 指定したサーバURLに指定したファイルをアップロードする。
 func (u *uploader) Upload(url string, uploadFilePath string) error {
 	command := fmt.Sprintf("curl -X POST -F file=@%v %v", uploadFilePath, url)
-	stdout, stderr, err := utils2.SimpleExec(command)
+	stdout, stderr, err := pkgOs.SimpleExec(command)
 	if strings.Contains(stdout, "request body too large") || err != nil {
 		return fmt.Errorf("Upload: stdout: %v \n stderr: %v ", stdout, stderr)
 	}

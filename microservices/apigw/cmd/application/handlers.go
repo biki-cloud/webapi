@@ -4,20 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	gg "webapi/microservices/apigw/pkg/getAllPrograms"
-	mg "webapi/microservices/apigw/pkg/memoryGetter"
+
+	"webapi/microservices/apigw/pkg/getAllPrograms"
+	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
-	gp "webapi/microservices/apigw/pkg/programHasServers"
-	sc "webapi/microservices/apigw/pkg/serverAliveConfirmer"
+	"webapi/microservices/apigw/pkg/programHasServers"
+	"webapi/microservices/apigw/pkg/serverAliveConfirmer"
 )
 
 // GetMinimumMemoryServerHandler は実際に疎通できるサーバの中から使用メモリが最小の
 // サーバのURLをJSONで表示するAPI
 func (app *Application) GetMinimumMemoryServerHandler(w http.ResponseWriter, r *http.Request) {
 	minimumMemoryServerSelector := minimumServerSelector.New()
-	memoryGetter := mg.New()
-	serverAliveConfirmer := sc.New()
-	url, err := minimumMemoryServerSelector.Select(app.Env.ExecServers, serverAliveConfirmer, memoryGetter, "/health/memory", "/health")
+	mg := memoryGetter.New()
+	sac := serverAliveConfirmer.New()
+	url, err := minimumMemoryServerSelector.Select(app.Env.ExecServers, sac, mg, "/health/memory", "/health")
 	if err != nil {
 		app.ServerError(w, err)
 	}
@@ -36,14 +37,14 @@ func (app *Application) GetMinimumMemoryServerHandler(w http.ResponseWriter, r *
 func (app *Application) GetMinimumMemoryAndHasProgram(w http.ResponseWriter, r *http.Request) {
 	programName := r.URL.Path[len("/program-server/minimumMemory-and-hasProgram/"):]
 	app.InfoLog.Printf("programName: %v ", programName)
-	serverAliveConfirmer := sc.New()
-	aliveServers, err := sc.GetAliveServers(app.Env.ExecServers, "/health", serverAliveConfirmer)
+	sac := serverAliveConfirmer.New()
+	aliveServers, err := serverAliveConfirmer.GetAliveServers(app.Env.ExecServers, "/health", sac)
 	if err != nil {
 		app.ServerError(w, err)
 	}
 	app.InfoLog.Printf("aliveservers: %v", aliveServers)
 
-	programHasServersGetter := gp.New()
+	programHasServersGetter := programHasServers.New()
 	programHasServers, err := programHasServersGetter.Get(aliveServers, "/program/all", programName)
 	if err != nil {
 		app.ServerError(w, err)
@@ -52,8 +53,8 @@ func (app *Application) GetMinimumMemoryAndHasProgram(w http.ResponseWriter, r *
 	app.InfoLog.Printf("programHasServers: %v ", programHasServers)
 
 	minimumMemoryServerSelector := minimumServerSelector.New()
-	memoryGetter := mg.New()
-	url, err := minimumMemoryServerSelector.Select(programHasServers, serverAliveConfirmer, memoryGetter, "/health/memory", "/health")
+	mg := memoryGetter.New()
+	url, err := minimumMemoryServerSelector.Select(programHasServers, sac, mg, "/health/memory", "/health")
 	if err != nil {
 		app.ServerError(w, err)
 	}
@@ -86,8 +87,8 @@ func mapToStruct(m interface{}, val interface{}) error {
 }
 
 func (app *Application) GetAliveServersHandler(w http.ResponseWriter, r *http.Request) {
-	serverAliveConfirmer := sc.New()
-	aliveServers, err := sc.GetAliveServers(app.Env.ExecServers, "/health", serverAliveConfirmer)
+	sac := serverAliveConfirmer.New()
+	aliveServers, err := serverAliveConfirmer.GetAliveServers(app.Env.ExecServers, "/health", sac)
 	if err != nil {
 		app.ServerError(w, err)
 	}
@@ -104,13 +105,13 @@ func (app *Application) GetAliveServersHandler(w http.ResponseWriter, r *http.Re
 func (app *Application) GetAllProgramsHandler(w http.ResponseWriter, r *http.Request) {
 	// allServerMapsはキーにプログラム名が入る。値はプログラム情報のmapが入る。
 	allServerMaps := map[string]interface{}{}
-	serverAliveConfirmer := sc.New()
-	aliveServers, err := sc.GetAliveServers(app.Env.ExecServers, "/health", serverAliveConfirmer)
+	sac := serverAliveConfirmer.New()
+	aliveServers, err := serverAliveConfirmer.GetAliveServers(app.Env.ExecServers, "/health", sac)
 	if err != nil {
 		app.ServerError(w, err)
 	}
 
-	allProgramGetter := gg.New()
+	allProgramGetter := getAllPrograms.New()
 	endPoint := "/program/all"
 	allServerMaps, err = allProgramGetter.Get(aliveServers, endPoint)
 

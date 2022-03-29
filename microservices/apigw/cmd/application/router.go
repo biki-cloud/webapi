@@ -2,7 +2,8 @@ package application
 
 import (
 	"net/http"
-	http2 "webapi/pkg/http/handlers"
+
+	pkgHttpHandlers "webapi/pkg/http/handlers"
 )
 
 func (app *Application) Routes() *http.ServeMux {
@@ -21,10 +22,10 @@ func (app *Application) Routes() *http.ServeMux {
 	router.HandleFunc("/program-server/program/all", app.GetAllProgramsHandler)
 
 	// このサーバが生きているかを判断するのに使用するハンドラ
-	router.HandleFunc("/health", http2.HealthHandler)
+	router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
 	// このサーバプログラムのメモリ状態をJSONで表示するAPI
-	router.HandleFunc("/health/memory", http2.GetRuntimeHandler)
+	router.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
 
 	return router
 }

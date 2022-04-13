@@ -97,6 +97,20 @@ func GetMaterials() []Struct {
 			ExpectedErrMsgIsEmpty: true,
 			ExpectedError:         nil,
 		},
+		{ // アップロードファイルに%が含まれている場合
+			TestName:              "upload file with percent. convertToJson",
+			IsSkip:                false,
+			ProgramName:           "convertToJson",
+			UploadFilePath:        "upload%file1",
+			UploadFileSize:        200,
+			Parameta:              "dummyParameta",
+			ExpectedOutFileNames:  []string{"uploadfile1.json1", "uploadfile1.json2"},
+			ExpectedStdOutIsEmpty: false,
+			ExpectedStdErrIsEmpty: true,
+			ExpectedStatus:        msgs.OK,
+			ExpectedErrMsgIsEmpty: true,
+			ExpectedError:         nil,
+		},
 		// アップロードファイルのサイズがconfigのMaxUploadSizeMBを超えている場合
 		// アップロードエラーが発生する。
 		{

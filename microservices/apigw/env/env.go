@@ -5,6 +5,8 @@ servers.jsonを読み込み、構造体に保持する。
 package env
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -17,6 +19,18 @@ type Env struct {
 	ExecServers []string
 	// GateWayServerPort example -> "80"
 	GateWayServerPort string
+}
+
+// Print 設定値を表示する。
+func Print(w io.Writer) {
+	e := New()
+	if os.Getenv("ENV") == "k8s" {
+		fmt.Fprintf(w, "K8S_EXEC_NODEPORT_PORTS : %v \n", e.ExecServers)
+		fmt.Fprintf(w, "K8S_APIGW_POD_PORT      : %v \n", e.GateWayServerPort)
+	} else {
+		fmt.Fprintf(w, "LOCAL_EXEC_SERVERS : %v \n", e.ExecServers)
+		fmt.Fprintf(w, "LOCAL_APIGW_PORT   : %v \n", e.GateWayServerPort)
+	}
 }
 
 // New はservers.jsonの中身をserversConfig構造体にセットし、返す

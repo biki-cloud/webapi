@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"webapi/microservices/apigw/cmd/application"
+	"webapi/microservices/apigw/env"
 )
 
 var (
@@ -28,7 +29,7 @@ func main() {
 			"Windows: SET LOCAL_EXEC_SERVERS=http://127.0.0.1:9001,http://127.0.0.1:9002,http://127.0.0.1:9003 \n\n  "+
 			" \n\nOptions: \n")
 		flag.PrintDefaults()
-		fmt.Fprintf(o, "\nUpdated date 2022.3.25 by morituka. \n\n")
+		fmt.Fprintf(o, "\nUpdated date 2022.4.6 by morituka. \n\n")
 	}
 	flag.Parse()
 
@@ -40,7 +41,9 @@ func main() {
 
 	os.Setenv("LOCAL_APIGW_PORT", myPort)
 
-	//cfg := env.New()
+	// 設定値を表示する
+	env.Print(os.Stdout)
+
 	a := application.New()
 	serverURI := ":" + myPort
 	srv := application.NewServer(serverURI, a)

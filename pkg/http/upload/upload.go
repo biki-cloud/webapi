@@ -9,8 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
 	"webapi/microservices/exec/pkg/msgs"
+
 	pkgInt "webapi/pkg/int"
 	pkgOs "webapi/pkg/os"
 	pkgString "webapi/pkg/string"
@@ -55,7 +55,10 @@ func UploadHelper(w http.ResponseWriter, r *http.Request, uploadDir string, maxU
 	// 保存用ディレクトリ内に新しいファイルを作成します。
 	// アップロードファイルに半角や全角のスペースがある場合は削除する。
 	spaceRemovedUploadFileName := pkgString.RemoveSpace(fileHeader.Filename)
-	uploadFilePath := filepath.Join(uploadDir, spaceRemovedUploadFileName)
+	// アップロードファイルに%がある場合はwebで扱う際にエラーの元になるため削除する。
+	replacedPercentUploadFileName := strings.Replace(spaceRemovedUploadFileName, "%", "", -1)
+
+	uploadFilePath := filepath.Join(uploadDir, replacedPercentUploadFileName)
 	dst, err := os.Create(uploadFilePath)
 	if err != nil {
 		return "", fmt.Errorf("UploadHelper: %v", err)

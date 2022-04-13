@@ -37,7 +37,7 @@ func main() {
 			"MAX_UPLOAD_SIZE_MB : 入力ファイルサイズの上限を何メガにするか                | default = 300 \n\n  "+
 			" \n\nOptions: \n")
 		flag.PrintDefaults()
-		fmt.Fprintf(o, "\nUpdated date 2022.3.25 by morituka. \n\n")
+		fmt.Fprintf(o, "\nUpdated date 2022.4.6 by morituka. \n\n")
 	}
 	flag.Parse()
 
@@ -49,6 +49,8 @@ func main() {
 
 	flag.Parse()
 	os.Setenv("MY_PORT", myPort)
+
+	env.Print(os.Stdout)
 
 	e := env.New()
 	a := application.New()

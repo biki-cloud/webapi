@@ -2,7 +2,6 @@ package application
 
 import (
 	"net/http"
-
 	pkgHttpMiddlewares "webapi/pkg/http/middlewares"
 )
 

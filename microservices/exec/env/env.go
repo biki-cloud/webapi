@@ -1,6 +1,8 @@
 package env
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"os"
 	"strconv"
@@ -40,6 +42,22 @@ type Env struct {
 	StderrBufferSize int
 	// 入力ファイルサイズの上限を何メガにするか
 	MaxUploadSizeMB int64
+}
+
+// Print 設定値を表示する。
+func Print(w io.Writer) {
+	e := New()
+	fmt.Fprintf(w, "FILESERVER_DIRNAME : %v \n", e.FileServer.Dir)
+	fmt.Fprintf(w, "UPLOAD_DIRNAME     : %v \n", e.FileServer.UploadDir)
+	fmt.Fprintf(w, "WORK_DIRNAME       : %v \n", e.FileServer.WorkDir)
+	fmt.Fprintf(w, "PROGRAMS_DIRNAME   : %v \n", e.ProgramsDir)
+	fmt.Fprintf(w, "WORKED_DIR_KEEP_SEC: %v \n", e.WorkedDirKeepSec)
+	fmt.Fprintf(w, "MY_IP              : %v \n", e.ProgramServerIP)
+	fmt.Fprintf(w, "MY_PORT            : %v \n", e.ProgramServerPort)
+	fmt.Fprintf(w, "EXECUTE_TIMEOUT_SEC: %v \n", e.ExecuteTimeoutSec)
+	fmt.Fprintf(w, "STDOUT_BUFFER_SIZE : %v \n", e.StdoutBufferSize)
+	fmt.Fprintf(w, "STDERR_BUFFER_SIZE : %v \n", e.StderrBufferSize)
+	fmt.Fprintf(w, "MAX_UPLOAD_SIZE_MB : %v \n", e.MaxUploadSizeMB)
 }
 
 // New はconfig.jsonの中身をstructに入れたものを返す

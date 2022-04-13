@@ -5,6 +5,8 @@ servers.jsonを読み込み、構造体に保持する。
 package env
 
 import (
+	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -18,6 +20,18 @@ type Env struct {
 	// ExecServers eg -> ["http://192.168.59.101:30007,http://192.168.59.101:30008"]
 	ExecServers []string
 	MyPort      string
+}
+
+func Print(w io.Writer) {
+	e := New()
+	if os.Getenv("ENV") == "k8s" {
+		fmt.Fprintf(w, "K8S_EXEC_NODEPORT_PORTS : %v \n", e.ExecServers)
+		fmt.Fprintf(w, "K8S_APIGW_NODEPORT_PORT : %v \n", e.APIGateWayServers)
+	} else {
+		fmt.Fprintf(w, "MY_PORT             : %v \n", e.MyPort)
+		fmt.Fprintf(w, "LOCAL_APIGW_SERVERS : %v \n", e.APIGateWayServers)
+		fmt.Fprintf(w, "LOCAL_EXEC_SERVERS  : %v \n", e.ExecServers)
+	}
 }
 
 func New() *Env {

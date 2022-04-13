@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"webapi/microservices/website/cmd/application"
+	"webapi/microservices/website/env"
 )
 
 var (
@@ -29,7 +30,7 @@ func main() {
 			"Linux  : export LOCAL_EXEC_SERVERS=http://127.0.0.1:9001,http://127.0.0.1:9002,http://127.0.0.1:9003 \n  "+"Windows: SET LOCAL_EXEC_SERVERS=http://127.0.0.1:9001,http://127.0.0.1:9002,http://127.0.0.1:9003 \n\n  "+
 			"\nOptions: \n")
 		flag.PrintDefaults()
-		fmt.Fprintf(o, "\nUpdated date 2022.3.25 by morituka. \n\n")
+		fmt.Fprintf(o, "\nUpdated date 2022.4.6 by morituka. \n\n")
 	}
 	flag.Parse()
 
@@ -41,6 +42,9 @@ func main() {
 
 	flag.Parse()
 	os.Setenv("MY_PORT", myPort)
+
+	// 設定値を表示させる
+	env.Print(os.Stdout)
 
 	serverURI := ":" + myPort
 	app := application.New()

@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" type="text/css" href="/static/css/body.css">
     <link rel="stylesheet" type="text/css" href="/static/css/table.css">
     <link rel="stylesheet" type="text/css" href="/static/css/button.css">
@@ -25,10 +25,26 @@
     <div class="loading-bar"></div>
 </div>
 
+<table border="1">
+    <tr>
+        <th>プログラム</th>
+        <th>ヘルプ</th>
+    </tr>
+    <tr>
+        <td>{{ .Name }}</td>
+        <td id="help-id">{{ .Help }}</td>
+    </tr>
+</table>
 
-<p>プログラム名: {{ .Name }}</p>
+<script>
+    let help_id = document.getElementById("help-id")
+    while (help_id.innerHTML.includes("\n")) {
+        help_id.innerHTML = help_id.innerHTML.replace("\n", "<br />")
+    }
+</script>
+
 <form id="form" enctype="multipart/form-data" action="/user/exec" method="POST">
-    <input type="hidden" id="proName" name="proName" value="{{ .Name }}"/>
+    <input type="hidden" id="proName" name="proName" value="{{ .Name }}" />
     <div class="cp_iptxt">
         <label class="ef">
             <input type="text" id="parameta" name="parameta" value="" placeholder="パラメータ"/>
@@ -62,7 +78,7 @@
         // 経過時間（秒）
         var spanedSec = 0;
         // 1秒間隔で無名関数を実行
-        var id = setInterval(function () {
+        var id = setInterval(function() {
             spanedSec++;
             // 経過時間 >= 待機時間の場合、待機終了。
             if (spanedSec >= waitSec) {
@@ -90,11 +106,11 @@
         // 定義しておく。
         let ajaxFailedJSON = "";
         let execServerURI = "{{ .ExecServerURI }}";
-        postURL = execServerURI+"/api/exec/" + proName
+        postURL = execServerURI + "/api/exec/" + proName
         console.log("api url: " + postURL)
         $.ajax({
             type: "POST",
-            url:  postURL,
+            url: postURL,
             data: form_data,
             enctype: "multipart/form-data",
             // headers: {
@@ -108,9 +124,9 @@
             dataType: "json",
             encode: true,
             async: true,
-        }).done(function (res) {
+        }).done(function(res) {
             console.log("ajax success")
-        }).fail(function (res) {
+        }).fail(function(res) {
             console.log("ajax fail")
             console.log(res.responseText)
             ajaxOK = false;
@@ -126,7 +142,7 @@
                 "status": "web page loading error.",
                 "errmsg": "msg from server: " + res.responseText
             }
-        }).always(function (res) {
+        }).always(function(res) {
             console.log(res);
 
             if (ajaxOK === false) {
@@ -160,7 +176,7 @@
             stdout_print_button.textContent = "Stdout"
             stdout_print_button.classList.add("btn")
             stdout_print_button.classList.add("btn-gradient")
-            stdout_print_button.onclick = function () {
+            stdout_print_button.onclick = function() {
                 if (stdout_textarea.style.display === "none") {
                     stdout_textarea.style.display = "block";
                 } else {
@@ -179,7 +195,7 @@
             stderr_print_button.textContent = "Stderr"
             stderr_print_button.classList.add("btn")
             stderr_print_button.classList.add("btn-gradient")
-            stderr_print_button.onclick = function () {
+            stderr_print_button.onclick = function() {
                 if (stderr_textarea.style.display === "none") {
                     stderr_textarea.style.display = "block";
                 } else {
@@ -197,7 +213,7 @@
             main_div.appendChild(download_p)
             if (res.outURLs === null) {
                 console.log("out url is null.")
-            }else {
+            } else {
                 for (let i = 0; i < res.outURLs.length; ++i) {
                     const download_link = document.createElement("a");
                     download_link.classList.add("download-link")
@@ -247,7 +263,7 @@
         document.getElementById("GoogleLoading").style.display = "block";
         // 前回の出力結果を全て削除する
         let output_div = document.getElementById("output");
-        while(output_div.lastChild) {
+        while (output_div.lastChild) {
             output_div.removeChild(output_div.lastChild)
         }
 
@@ -276,7 +292,7 @@
     };
 
     function finish() {
-        sleep(0.1, function () {
+        sleep(0.1, function() {
             // outputdivの子要素がプロセスが終了するごとに増えるのでそれを見て進捗状況を計算し、表示する。
             output_div = document.getElementById("output")
             number_of_finish = output_div.childElementCount
@@ -302,7 +318,7 @@
 
     dropZone.addEventListener(
         "dragover",
-        function (e) {
+        function(e) {
             e.stopPropagation();
             e.preventDefault();
             this.style.background = "#e1e7f0";
@@ -312,7 +328,7 @@
 
     dropZone.addEventListener(
         "dragleave",
-        function (e) {
+        function(e) {
             e.stopPropagation();
             e.preventDefault();
             this.style.background = "#ffffff";
@@ -322,7 +338,7 @@
 
     dropZone.addEventListener(
         "drop",
-        function (e) {
+        function(e) {
             e.stopPropagation();
             e.preventDefault();
             this.style.background = "#ffffff"; //背景色を白に戻す

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: exec-python2
-          image: 192.168.1.12:5010/exec-python:v1
+          image: 192.168.1.12:5010/exec-python:v1.0.1
           workingDir: /root/exec
           ports:
             - containerPort: 80
@@ -26,7 +26,6 @@ spec:
           env:
             - name: "EXEC_NODEPORT_PORT"
               value: "30012"
-
 
 # クラスタ外部に公開
 # websiteのjavascriptからPOSTを受けつけるため

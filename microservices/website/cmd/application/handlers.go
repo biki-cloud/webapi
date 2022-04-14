@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"path/filepath"
 	"sort"
+	pkgOs "webapi/pkg/os"
 
 	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
 	"webapi/microservices/apigw/pkg/programHasServers"
 	"webapi/microservices/apigw/pkg/serverAliveConfirmer"
-	pkgOs "webapi/pkg/os"
 )
 
 // mapToStruct はmapからstructに変換する。
@@ -170,13 +170,15 @@ func (app *Application) Exec(w http.ResponseWriter, r *http.Request) {
 	// それをURIをformの一部に載せるのでそれをここで受け取り、またexec.htmlに渡して、
 	// ajaxでそのURIのサーバへPOSTする
 	execServerURI := r.FormValue("execServerURI")
+	help := r.FormValue("help")
 
 	type data struct {
 		Name          string
+		Help string
 		ExecServerURI string
 	}
 
-	d := data{Name: proName, ExecServerURI: execServerURI}
+	d := data{Name: proName, ExecServerURI: execServerURI, Help: help}
 
 	app.RenderTemplate(w, serveHtml, d)
 }

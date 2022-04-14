@@ -1,34 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Claudia</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/body.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/table.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/button.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/body.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/button.css" />
     <script src="/static/js/main.js"></script>
-    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.png" />
 </head>
 
 <body>
-<table border="1" id="pro-table">
-    <tr>
-        <th>プログラム</th>
-        <th>ヘルプ</th>
-    </tr>
-    {{ range .ProInfos }}
-    <tr>
-        <td>
-            <form action="/user/exec/{{ .Name }}" method="post">
-                <input type="hidden" name="proName" value="{{ .Name }}" />
-                <input type="hidden" name="execServerURI" value="{{ .URL }}" />
-                <input type="submit" value="{{ .Name }}" class="btn btn-gradient"/>
-            </form>
-        </td>
-        <td>{{ .Help }}</td>
-    </tr>
-    {{ end }}
-</table>
+    <table border="1" id="pro-table">
+        <tr>
+            <th>プログラム</th>
+            <th>ヘルプ</th>
+        </tr>
+        {{ range .ProInfos }}
+        <tr>
+            <td>
+                <form action="/user/exec/{{ .Name }}" method="post">
+                    <input type="hidden" name="proName" value="{{ .Name }}" />
+                    <input type="hidden" name="help" value="{{ .Help }}" />
+                    <input type="hidden" name="execServerURI" value="{{ .URL }}" />
+                    <input type="submit" value="{{ .Name }}" class="btn btn-gradient" />
+                </form>
+            </td>
+            <td class="help-class">{{ .Help }}</td>
+        </tr>
+        {{ end }}
+    </table>
+
+    <script>
+        let helps = document.getElementsByClassName("help-class");
+        for (let i = 0; i < helps.length; i++) {
+            while (helps[i].innerHTML.includes("\n")) {
+                helps[i].innerHTML = helps[i].innerHTML.replace("\n", "<br />");
+            }
+            console.log("end");
+        }
+    </script>
 </body>
 
 </html>

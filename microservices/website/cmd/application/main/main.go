@@ -26,8 +26,6 @@ func main() {
 			"実行する前にAPIGWサーバのアドレスを環境変数にセットしてください。値は環境に応じて変更してください。\n  "+
 			"Linux  : export LOCAL_APIGW_SERVERS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n  "+
 			"Windows: SET LOCAL_APIGW_SERVERS=http://127.0.0.1:8001,http://127.0.0.1:8002,http://127.0.0.1:8003 \n\n  "+
-			"実行する前にExecサーバのアドレスを環境変数にセットしてください。値は環境に応じて変更してください。\n  "+
-			"Linux  : export LOCAL_EXEC_SERVERS=http://127.0.0.1:9001,http://127.0.0.1:9002,http://127.0.0.1:9003 \n  "+"Windows: SET LOCAL_EXEC_SERVERS=http://127.0.0.1:9001,http://127.0.0.1:9002,http://127.0.0.1:9003 \n\n  "+
 			"\nOptions: \n")
 		flag.PrintDefaults()
 		fmt.Fprintf(o, "\nUpdated date 2022.4.6 by morituka. \n\n")

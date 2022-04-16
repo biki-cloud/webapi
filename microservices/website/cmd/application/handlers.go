@@ -34,8 +34,7 @@ func mapToStruct(m interface{}, val interface{}) error {
 // プログラムがあるサーバなおかつメモリ使用量が最小のサーバのURLをセットし、
 // webpageに表示する.ボタンが押されたらそのサーバのプログラム実行準備画面に飛ぶ
 func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
-	// config.jsonのAPIゲートウェイサーバからメモリ消費が一番少ないサーバを選択する。
-	// 生きているサーバのリストを取得
+	// APIゲートウェイサーバから生きているサーバを取得、かつメモリ消費が一番少ないサーバを選択する。
 	confirmer := serverAliveConfirmer.New()
 	apigwServers, err := serverAliveConfirmer.GetAliveServers(app.Env.APIGateWayServers, "/health", confirmer)
 	if len(apigwServers) == 0 {
@@ -174,7 +173,7 @@ func (app *Application) Exec(w http.ResponseWriter, r *http.Request) {
 
 	type data struct {
 		Name          string
-		Help string
+		Help          string
 		ExecServerURI string
 	}
 

@@ -10,12 +10,12 @@ kubectl delete -f configmap.yml
 echo "kubectl apply -f configmap.yml"
 kubectl apply -f configmap.yml
 
-
-./website.sh
+./exec-python1.sh
+./exec-python2.sh
 
 ./apigw.sh
 
-./exec-python1.sh
-./exec-python2.sh
+./website.sh
+
 
 ./cli.sh

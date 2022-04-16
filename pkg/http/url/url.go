@@ -25,7 +25,7 @@ func GetURLFromFilePath(filePath string, ip, port, fileServerDir string) (fileUR
 	basename := filepath.Base(filePath)
 	port = ":" + port + "/"
 
-	fileURLPath = "http://" + ip + port + filepath.Join(filepath.Dir(filePath), basename)
+	fileURLPath = "http://" + ip + port + "download/" + filepath.Join(filepath.Dir(filePath), basename)
 
 	return fileURLPath, nil
 }

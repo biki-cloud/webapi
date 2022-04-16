@@ -34,5 +34,8 @@ func (app *Application) Routes() *http.ServeMux {
 	// このサーバが生きているかを判断するのに使用するハンドラ
 	r.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
+	// コンテンツをダウンロードするためのAPI
+	r.HandleFunc("/download/", app.Download)
+
 	return r
 }

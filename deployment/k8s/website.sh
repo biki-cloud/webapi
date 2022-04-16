@@ -22,14 +22,14 @@ cp -r microservices/website/cmd/application/ui deployment/k8s/website-kube/websi
 
 cd deployment/k8s/website-kube
 
-echo "docker rmi 192.168.1.12:5010/website:v1.0.2"
-docker rmi 192.168.1.12:5010/website:v1.0.2
+echo "docker rmi 192.168.1.12:5010/website:v1.0.3"
+docker rmi 192.168.1.12:5010/website:v1.0.3
 
-echo "docker build --no-cache -t 192.168.1.12:5010/website:v1.0.3 ."
-docker build --no-cache -t 192.168.1.12:5010/website:v1.0.3 .
+echo "docker build --no-cache -t 192.168.1.12:5010/website:v1.0.4 ."
+docker build --no-cache -t 192.168.1.12:5010/website:v1.0.4 .
 
-echo "docker push 192.168.1.12:5010/website:v1.0.3"
-docker push 192.168.1.12:5010/website:v1.0.3
+echo "docker push 192.168.1.12:5010/website:v1.0.4"
+docker push 192.168.1.12:5010/website:v1.0.4
 
 # cd k8s
 cd ..

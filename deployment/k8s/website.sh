@@ -34,5 +34,8 @@ docker push 192.168.1.12:5010/website:v1.0.6
 # cd k8s
 cd ..
 
+echo "kubectl delete -f website.yml"
+kubectl delete -f website.yml
+
 echo "kubectl apply -f website.yml"
 kubectl apply -f website.yml

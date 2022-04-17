@@ -25,14 +25,17 @@ echo "docker rmi 192.168.1.12:5010/exec-python:v1.0.1"
 docker rmi 192.168.1.12:5010/exec-python:v1.0.1
 
 # build from Dockerfile
-echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.2"
-docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.2 .
+echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.4"
+docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.8 .
 
-echo "docker push 192.168.1.12:5010/exec-python:v1.0.2"
-docker push 192.168.1.12:5010/exec-python:v1.0.2
+echo "docker push 192.168.1.12:5010/exec-python:v1.0.4"
+docker push 192.168.1.12:5010/exec-python:v1.0.8
 
 # cd k8s
 cd ..
+
+echo "kubectl delete -f exec-python2.yml"
+kubectl delete -f exec-python2.yml
 
 echo "kubectl apply -f exec-python2.yml"
 kubectl apply -f exec-python2.yml

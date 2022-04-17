@@ -11,12 +11,14 @@ echo "kubectl apply -f configmap.yml"
 kubectl apply -f configmap.yml
 
 # 順番はこんな感じ
+./website.sh
+sleep 30
+
 ./exec-python1.sh
 ./exec-python2.sh
 
 ./apigw.sh
 
-./website.sh
 
 
 ./cli.sh

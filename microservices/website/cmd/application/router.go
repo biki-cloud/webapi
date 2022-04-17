@@ -3,6 +3,7 @@ package application
 import (
 	"net/http"
 	"path/filepath"
+	pkgHttpHandlers "webapi/pkg/http/handlers"
 
 	pkgOs "webapi/pkg/os"
 )
@@ -20,6 +21,9 @@ func (app *Application) Routes() *http.ServeMux {
 		panic(err.Error())
 	}
 	router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(currentDir, "ui/static")))))
+
+	// このサーバが生きているかを判断するのに使用するハンドラ
+	router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
 	return router
 }

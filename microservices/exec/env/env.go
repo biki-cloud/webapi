@@ -6,9 +6,8 @@ import (
 	"log"
 	"os"
 	"strconv"
-
+	"webapi/pkg/k8s"
 	pkgOs "webapi/pkg/os"
-	pkgRandom "webapi/pkg/random"
 )
 
 // FileServerConf is relevant fileserver information struct.
@@ -83,7 +82,10 @@ func New() *Env {
 		// K8S_WORKER_NODE_IPSからランダムで設定することによりNODEPORTサービスを利用しているので
 		// outURLsにURLをセットするときにどれかのノードポートにアクセスすればダウンロードできる
 		li := pkgOs.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
-		e.ProgramServerIP = pkgRandom.Choice(li)
+		e.ProgramServerIP, err = k8s.LoadBalance(li, os.Getenv("K8S_WEBSITE_NODEPORT_PORT"))
+		if err != nil {
+			log.Fatalf("Env.New(): %v \n", err.Error())
+		}
 		e.ProgramServerPort = os.Getenv("EXEC_NODEPORT_PORT")
 
 		n, err = strconv.Atoi(os.Getenv("EXECUTE_TIMEOUT_SEC"))

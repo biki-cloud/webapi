@@ -9,9 +9,9 @@ import (
 	"io"
 	"log"
 	"os"
+	"webapi/pkg/k8s"
 
 	pkgOs "webapi/pkg/os"
-	pkgRandom "webapi/pkg/random"
 )
 
 type Env struct {
@@ -45,10 +45,15 @@ func New() *Env {
 
 		// ワーカーノード３台の中から一台を選択
 		workerNodeIPs := pkgOs.ListEnvToSlice(os.Getenv("K8S_WORKER_NODE_IPS"))
-		workerNodeIP := pkgRandom.Choice(workerNodeIPs)
+		execNodePortPorts := pkgOs.ListEnvToSlice(os.Getenv("K8S_EXEC_NODEPORT_PORTS"))
+		//workerNodeIP := pkgRandom.Choice(workerNodeIPs)
+		// apigwを起動する前にexecを起動させる必要がある。
+		workerNodeIP, err := k8s.LoadBalance(workerNodeIPs, execNodePortPorts[0])
+		if err != nil {
+			log.Fatalf("Env.New(): %v \n", err.Error())
+		}
 
 		// それぞれ別のexecサーバにアクセスするようにURIを作成する。
-		execNodePortPorts := pkgOs.ListEnvToSlice(os.Getenv("K8S_EXEC_NODEPORT_PORTS"))
 		var execServers []string
 		for _, p := range execNodePortPorts {
 			uri := "http://" + workerNodeIP + ":" + p

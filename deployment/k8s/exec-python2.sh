@@ -26,10 +26,10 @@ docker rmi 192.168.1.12:5010/exec-python:v1.0.1
 
 # build from Dockerfile
 echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.4"
-docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.8 .
+docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.1.0 .
 
 echo "docker push 192.168.1.12:5010/exec-python:v1.0.4"
-docker push 192.168.1.12:5010/exec-python:v1.0.8
+docker push 192.168.1.12:5010/exec-python:v1.1.0
 
 # cd k8s
 cd ..

@@ -10,6 +10,7 @@ kubectl delete -f configmap.yml
 echo "kubectl apply -f configmap.yml"
 kubectl apply -f configmap.yml
 
+# 順番はこんな感じ
 ./exec-python1.sh
 ./exec-python2.sh
 

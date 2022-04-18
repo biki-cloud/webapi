@@ -10,6 +10,7 @@ import (
 	"net/http"
 
 	"webapi/microservices/exec/config"
+	"webapi/microservices/exec/env"
 	"webapi/microservices/exec/pkg/execution/contextManager"
 	"webapi/microservices/exec/pkg/execution/executer"
 	"webapi/microservices/exec/pkg/execution/outputManager"
@@ -23,6 +24,7 @@ import (
 // に送られる。
 // アップロードファイルやパラメータ等を使用し、コマンド実行する。
 func (app *Application) APIExec(w http.ResponseWriter, r *http.Request) {
+	app.Cfg = env.New()
 	w.Header().Set("Content-Type", "application/json")
 	programName := r.URL.Path[len("/exec/"):]
 
@@ -60,6 +62,7 @@ func (app *Application) APIExec(w http.ResponseWriter, r *http.Request) {
 
 // AllHandler は登録されているプログラムの全てをJSONで返す。
 func (app *Application) AllHandler(w http.ResponseWriter, r *http.Request) {
+	app.Cfg = env.New()
 	_ = r.Body
 
 	proConfList, err := config.GetPrograms()

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"webapi/microservices/apigw/env"
 	"webapi/microservices/apigw/pkg/getAllPrograms"
 	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
@@ -15,6 +16,7 @@ import (
 // GetMinimumMemoryServerHandler は実際に疎通できるサーバの中から使用メモリが最小の
 // サーバのURLをJSONで表示するAPI
 func (app *Application) GetMinimumMemoryServerHandler(w http.ResponseWriter, r *http.Request) {
+	app.Env = env.New()
 	minimumMemoryServerSelector := minimumServerSelector.New()
 	mg := memoryGetter.New()
 	sac := serverAliveConfirmer.New()
@@ -35,6 +37,7 @@ func (app *Application) GetMinimumMemoryServerHandler(w http.ResponseWriter, r *
 // GetMinimumMemoryAndHasProgram は実際にプログラムがあるサーバかつ、使用メモリが最小の
 // サーバのURLをJSONで表示するAPI
 func (app *Application) GetMinimumMemoryAndHasProgram(w http.ResponseWriter, r *http.Request) {
+	app.Env = env.New()
 	programName := r.URL.Path[len("/program-server/minimumMemory-and-hasProgram/"):]
 	app.InfoLog.Printf("programName: %v ", programName)
 	sac := serverAliveConfirmer.New()
@@ -87,6 +90,7 @@ func mapToStruct(m interface{}, val interface{}) error {
 }
 
 func (app *Application) GetAliveServersHandler(w http.ResponseWriter, r *http.Request) {
+	app.Env = env.New()
 	sac := serverAliveConfirmer.New()
 	aliveServers, err := serverAliveConfirmer.GetAliveServers(app.Env.ExecServers, "/health", sac)
 	if err != nil {
@@ -103,6 +107,7 @@ func (app *Application) GetAliveServersHandler(w http.ResponseWriter, r *http.Re
 }
 
 func (app *Application) GetAllProgramsHandler(w http.ResponseWriter, r *http.Request) {
+	app.Env = env.New()
 	// allServerMapsはキーにプログラム名が入る。値はプログラム情報のmapが入る。
 	allServerMaps := map[string]interface{}{}
 	sac := serverAliveConfirmer.New()

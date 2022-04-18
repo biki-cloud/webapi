@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: exec-python1
-          image: 192.168.1.12:5010/exec-python:v1.1.4
+          image: 192.168.1.12:5010/exec-python:v1.1.5
           workingDir: /root/exec
           ports:
             - containerPort: 80

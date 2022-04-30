@@ -3,8 +3,9 @@ package test
 import (
 	"fmt"
 	"time"
-	app2 "webapi/microservices/exec/cmd/application"
-	http2 "webapi/pkg/http/url"
+
+	execApp "webapi/microservices/exec/cmd/application"
+	pkgHttpURL "webapi/pkg/http/url"
 )
 
 // GetStartedServers
@@ -14,17 +15,17 @@ import (
 // ports: ["8001", "8002", "8003"]
 func GetStartedServers(numberOfServer int) (addrs, ports []string, err error) {
 	for (len(addrs) < numberOfServer && len(ports) < numberOfServer) || (addrs == nil && ports == nil) {
-		addr, err := http2.GetLoopBackURL()
+		addr, err := pkgHttpURL.GetLoopBackURL()
 		if err != nil {
 			return nil, nil, err
 		}
-		port := http2.GetPortFromURL(addr)
+		port := pkgHttpURL.GetPortFromURL(addr)
 
 		var done chan error
 		go func() {
 			// サーバを起動するときはhttp://をつけてはいけない
-			a := app2.New()
-			srv := app2.NewServer(addr, a)
+			a := execApp.New()
+			srv := execApp.NewServer(addr, a)
 			done <- srv.ListenAndServe()
 		}()
 		// １秒かかる前にserverStartに値が入ってきたということはhttp.ListenAndServeがエラーですぐ終了した場合。

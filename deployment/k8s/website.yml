@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: website
-          image: 192.168.1.12:5010/website:v1.0.8
+          image: 192.168.1.12:5010/website:v1.0.7
           ports:
             - containerPort: 80
           envFrom:

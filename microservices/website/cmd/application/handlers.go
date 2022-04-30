@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"path/filepath"
 	"sort"
-	pkgOs "webapi/pkg/os"
-
 	"webapi/microservices/apigw/pkg/memoryGetter"
 	"webapi/microservices/apigw/pkg/minimumServerSelector"
 	"webapi/microservices/apigw/pkg/programHasServers"
 	"webapi/microservices/apigw/pkg/serverAliveConfirmer"
+	pkgOs "webapi/pkg/os"
+	pkgRandom "webapi/pkg/random"
 )
 
 // mapToStruct はmapからstructに変換する。
@@ -122,14 +122,18 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 			app.ServerError(w, err)
 		}
 
-		// プログラムを保持しているサーバたちの中で一番使用メモリが少ないサーバを選択する。
-		mmss := minimumServerSelector.New()
-		mg := memoryGetter.New()
-		sac := serverAliveConfirmer.New()
-		url, err := mmss.Select(phs, sac, mg, "/health/memory", "/health")
-		if err != nil {
-			app.ServerError(w, err)
-		}
+		// 2022/4/18 webページをロードするのに時間がかかるため、ランダムで選択するようにした。
+		// あっちには反映させていない。
+		//// プログラムを保持しているサーバたちの中で一番使用メモリが少ないサーバを選択する。
+		//mmss := minimumServerSelector.New()
+		//mg := memoryGetter.New()
+		//sac := serverAliveConfirmer.New()
+		//url, err := mmss.Select(phs, sac, mg, "/health/memory", "/health")
+		//if err != nil {
+		//	app.ServerError(w, err)
+		//}
+
+		url := pkgRandom.Choice(phs)
 
 		p := proInfo{
 			Name:    proName,

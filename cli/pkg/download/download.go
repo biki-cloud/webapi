@@ -29,21 +29,12 @@ type downloader struct{}
 // Download はダウンロードしたいファイルURLを入れて、outputDirへダウンロードする。
 func (d *downloader) Download(url, outputDir string, done chan error, wg *sync.WaitGroup, mover os.Mover) {
 	defer wg.Done() // 関数終了時にデクリメント
-	command := "curl -OL " + url
+	basename := filepath.Base(url)
+	newLocation := filepath.Join(outputDir, basename)
+	command := "curl -L " + "-o " + newLocation + " " + url
 	_, _, err := os.SimpleExec(command)
 	if err != nil {
 		done <- err
 		return
 	}
-
-	// 引数で指定された出力ディレクトリに移動させる
-	basename := filepath.Base(url)
-	newLocation := filepath.Join(outputDir, basename)
-	err = mover.Move(basename, newLocation)
-	if err != nil {
-		done <- err
-		return
-	}
-	done <- nil
-	return
 }

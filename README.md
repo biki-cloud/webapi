@@ -32,15 +32,28 @@ go test ./...
 ```
 
 ## マイクロサービスの作成方法
-1. どのようなマイクロサービスにするかを決定する。
-入力ファイルに.jsonの拡張子を付与し、出力するマイクロサービスを作成する。
+1. どのようなマイクロサービスにするかを決定する。 <br>
+実装内容: 入力ファイルに.jsonの拡張子を付与し、出力するマイクロサービスを作成する。
 
-2. コマンドを決定する
+<br>
+
+2. プロジェクトを作成
+```shell
+mkdir ConvertToJson
+cd ConvertToJson
+touch convert_to_json.py
+```
+
+<br>
+
+3. コマンドを決定する
 ```shell
 python3 convert_to_json.py <input file> <output dir> 
 ```
 
-3. 実装する
+<br>
+
+4. 実装する
 ```python
 import os
 import shutil
@@ -51,4 +64,33 @@ output_dir = sys.argv[2]
 
 outfile = os.path.join(output_dir, os.path.basename(infile)) + ".json"
 shutil.move(infile, outfile)
+```
+
+<br>
+
+5. ヘルプを書く
+```shell
+cat help.txt
+入力ファイルに.jsonを付与し、出力ディレクトリに移動させる。
+```
+
+## マイクロサービスをexecサービスへ登録する方法
+1. exec/config/programConfig.jsonを編集する
+```json
+{
+  "programs": [
+    {
+      "name": "ConvertToJson",
+      "command": "python3 programs/ConvertToJson/convert_to_json.py INPUTFILE OUTPUTDIR",
+      "helpPath": "programs/ConvertToJson/help.txt"
+    }
+  ]
+}
+```
+
+<br>
+
+2. [マイクロサービスの作成方法](#マイクロサービスの作成方法)で作成したプロジェクトをexecディレクトリへ格納する。
+```shell
+mv ConvertToJson exec/programs/ConvertToJson
 ```

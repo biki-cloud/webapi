@@ -19,11 +19,102 @@ K8Sの上で動作する。
 ## apigw
 execへのロードバランサを担当している
 
+### REST API
+```go
+package application
+
+import (
+  "net/http"
+
+  pkgHttpHandlers "webapi/pkg/http/handlers"
+)
+
+func (app *Application) Routes() *http.ServeMux {
+  router := http.NewServeMux()
+
+  // コマンドラインからはここにアクセスし、メモリ使用量が一番低いサーバのURLを返す。
+  router.HandleFunc("/program-server/memory/minimum", app.GetMinimumMemoryServerHandler)
+
+  // コマンドラインからここにアクセスし、プログラムがあるかつメモリ使用量が一番低いサーバのURLを返す。
+  router.HandleFunc("/program-server/minimumMemory-and-hasProgram/", app.GetMinimumMemoryAndHasProgram)
+
+  // 現在稼働しているサーバを返すAPI
+  router.HandleFunc("/program-server/alive", app.GetAliveServersHandler)
+
+  // 生きている全てのサーバのプログラムを取得してJSONで表示するAPI
+  router.HandleFunc("/program-server/program/all", app.GetAllProgramsHandler)
+
+  // このサーバが生きているかを判断するのに使用するハンドラ
+  router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
+
+  // このサーバプログラムのメモリ状態をJSONで表示するAPI
+  router.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
+
+  return router
+}
+```
+
 ## exec
 作成したマイクロサービスを登録し、マイクロサービスへリクエストが来れば、実行する。
 
+### REST API
+```go
+package application
+
+import (
+  "net/http"
+
+  pkgHttpHandlers "webapi/pkg/http/handlers"
+)
+
+// Routes ハンドラをセットしたrouterを返す。
+func (app *Application) Routes() *http.ServeMux {
+  r := http.NewServeMux()
+
+  // ファイルサーバーの機能のハンドラ
+  // Env.FileServer.Dir以下のファイルをwebから見ることができる。
+  fileServer := "/" + app.Cfg.FileServer.Dir + "/"
+  r.Handle(fileServer, http.StripPrefix(fileServer, http.FileServer(http.Dir(app.Cfg.FileServer.Dir))))
+
+  // 登録プログラムを実行させるAPI
+  r.HandleFunc("/api/exec/", app.APIExec)
+
+  // ファイルをアップロードするAPI
+  r.HandleFunc("/api/upload", app.APIUpload)
+
+  // このサーバプログラムのメモリ状態をJSONで表示するAPI
+  r.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
+
+  // プログラムサーバに登録してあるプログラム一覧をJSONで表示するAPI
+  r.HandleFunc("/program/all", app.AllHandler)
+
+  // このサーバが生きているかを判断するのに使用するハンドラ
+  r.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
+
+  // コンテンツをダウンロードするためのAPI
+  r.HandleFunc("/download/", app.Download)
+
+  return r
+}
+```
+
 ## cli
 コマンドラインでexecに登録したマイクロサービスを利用できる
+
+### How to use
+```shell
+# 一番シンプルな実行方法 
+cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> 
+   
+# パラメータを付加させる場合, -pの後の文字列をダブルクォーテーションで囲む必要がある。中の文字列の構成は登録プログラムの仕様に依存する。 
+cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> -p "<パラメータ１,パラメータ２>" 
+   
+# 実行結果をJSONで受け取る場合 
+cli -j -name <プログラム名> -i <入力ファイル> -o <出力ファイル> 
+ 
+# プログラムの処理過程を表示しながら実行する場合 
+cli -l -name <プログラム名> -i <入力ファイル> -o <出力ファイル>
+```
 
 
 ## Test

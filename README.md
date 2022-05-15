@@ -7,7 +7,9 @@ K8Sの上で動作する。
 - MicroServices
     - [website](#website)
     - [apigw](#apigw)
+      - [REST API](#REST API)
     - [exec](#exec)
+      - [REST API](#REST API)
     - [cli](#cli)
 - [Test](#Test)
 - [マイクロサービスの作成方法](#マイクロサービスの作成方法)

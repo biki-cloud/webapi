@@ -7,9 +7,9 @@ K8Sの上で動作する。
 - MicroServices
     - [website](#website)
     - [apigw](#apigw)
-      - [REST API](#REST API)
+      - [REST API](#apigw REST API)
     - [exec](#exec)
-      - [REST API](#REST API)
+      - [REST API](#exec REST API)
     - [cli](#cli)
 - [Test](#Test)
 - [マイクロサービスの作成方法](#マイクロサービスの作成方法)
@@ -21,7 +21,7 @@ K8Sの上で動作する。
 ## apigw
 execへのロードバランサを担当している
 
-### REST API
+### apigw REST API
 ```go
 package application
 
@@ -59,7 +59,7 @@ func (app *Application) Routes() *http.ServeMux {
 ## exec
 作成したマイクロサービスを登録し、マイクロサービスへリクエストが来れば、実行する。
 
-### REST API
+### exec REST API
 ```go
 package application
 

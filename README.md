@@ -1,7 +1,8 @@
-## Easy Micro Service
+## EMS (Easy Micro Service)
 
-誰でも簡単にマイクロサービスを開発できるプラットフォーム。
-K8Sの上で動作する。
+EMS is a platform where everybody can develop microservices.
+Users can concentrate on developing their microservices.
+Usually, EMS works on the k8s.
 
 ## Contents
 - MicroServices
@@ -12,7 +13,7 @@ K8Sの上で動作する。
       - [REST API](#exec REST API)
     - [cli](#cli)
 - [Test](#Test)
-- [マイクロサービスの作成方法](#マイクロサービスの作成方法)
+- [How to create microservices](#How to create microservices)
 
 
 ## website

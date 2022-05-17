@@ -8,9 +8,9 @@ Usually, EMS works on the k8s.
 - MicroServices
     - [website](#website)
     - [apigw](#apigw)
-      - [REST API](#apigw-REST-API)
+      - [apigw REST API](#apigw-REST-API)
     - [exec](#exec)
-      - [REST API](#exec-REST-API)
+      - [exec REST API](#exec-REST-API)
     - [cli](#cli)
 - [Test](#Test)
 - [How to create microservices](#How-to-create-microservices)

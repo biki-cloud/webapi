@@ -17,10 +17,10 @@ Usually, EMS works on the k8s.
 
 
 ## website
-作成したマイクロサービスをブラウザで使用する
+website is a web application that users use registered microservices of EMS.
 
 ## apigw
-execへのロードバランサを担当している
+apigw works load balancing to exec service and manage registered microservices of exec service.
 
 ### apigw REST API
 ```go
@@ -58,7 +58,7 @@ func (app *Application) Routes() *http.ServeMux {
 ```
 
 ## exec
-作成したマイクロサービスを登録し、マイクロサービスへリクエストが来れば、実行する。
+exec works registering created microservices and executing microservices.
 
 ### exec REST API
 ```go
@@ -126,12 +126,12 @@ go test ./...
 ```
 
 ## How to create microservices
-1. どのようなマイクロサービスにするかを決定する。 <br>
-実装内容: 入力ファイルに.jsonの拡張子を付与し、出力するマイクロサービスを作成する。
+1. Determine microservices that we want to create <br>
+Content of implement: We want to create microservices that take file, then output file that is added extension of ".json" to them.
 
 <br>
 
-2. プロジェクトを作成
+2. Create project
 ```shell
 mkdir ConvertToJson
 cd ConvertToJson
@@ -140,14 +140,14 @@ touch convert_to_json.py
 
 <br>
 
-3. コマンドを決定する
+3. Determine command to execute
 ```shell
 python3 convert_to_json.py <input file> <output dir> 
 ```
 
 <br>
 
-4. 実装する
+4. Coding
 ```python
 import os
 import shutil
@@ -162,14 +162,14 @@ shutil.move(infile, outfile)
 
 <br>
 
-5. ヘルプを書く
+5. Write help about coded program
 ```shell
 cat help.txt
-入力ファイルに.jsonを付与し、出力ディレクトリに移動させる。
+take file, then output file that is added extension of ".json" to them.
 ```
 
-## マイクロサービスをexecサービスへ登録する方法
-1. exec/config/programConfig.jsonを編集する
+## How to register microservices to exec service.
+1. Edit exec/config/programConfig.json
 ```json
 {
   "programs": [
@@ -184,7 +184,7 @@ cat help.txt
 
 <br>
 
-2. [マイクロサービスの作成方法](#マイクロサービスの作成方法)で作成したプロジェクトをexecディレクトリへ格納する。
+2. [How to create microservices](#how-to-create-microservices)
 ```shell
 mv ConvertToJson exec/programs/ConvertToJson
 ```

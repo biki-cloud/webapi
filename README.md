@@ -5,7 +5,8 @@ Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
 ## Contents
-- MicroServices
+- [Let's Get started](#lets-get-started)
+- [MicroServices](#what-is-microservices)
     - [website](#website)
     - [apigw](#apigw)
       - [apigw REST API](#apigw-REST-API)
@@ -15,6 +16,17 @@ Usually, EMS works on the k8s.
 - [Test](#Test)
 - [How to create microservices](#How-to-create-microservices)
 
+## Let's Get started
+how to work as local environment.
+
+## What is MicroServices.
+Microservices - also known as the microservice architecture - is an architectural style that structures an application as a collection of services that are
+
+- Highly maintainable and testable
+- Loosely coupled
+- Independently deployable
+- Organized around business capabilities
+- Owned by a small team
 
 ## website
 website is a web application that users use registered microservices of EMS.

@@ -35,22 +35,23 @@ import (
 func (app *Application) Routes() *http.ServeMux {
   router := http.NewServeMux()
 
-  // コマンドラインからはここにアクセスし、メモリ使用量が一番低いサーバのURLを返す。
+  // Return exec server URL that uses lowest using memory.
   router.HandleFunc("/program-server/memory/minimum", app.GetMinimumMemoryServerHandler)
 
-  // コマンドラインからここにアクセスし、プログラムがあるかつメモリ使用量が一番低いサーバのURLを返す。
+  // Return exec server URL that has program and uses lowest using program.
   router.HandleFunc("/program-server/minimumMemory-and-hasProgram/", app.GetMinimumMemoryAndHasProgram)
 
-  // 現在稼働しているサーバを返すAPI
+  // Return exec servers URL that is working in real time.
   router.HandleFunc("/program-server/alive", app.GetAliveServersHandler)
 
-  // 生きている全てのサーバのプログラムを取得してJSONで表示するAPI
+  // Get program info that all exec server has.
+  // Return display it as JSON.
   router.HandleFunc("/program-server/program/all", app.GetAllProgramsHandler)
 
-  // このサーバが生きているかを判断するのに使用するハンドラ
+  // This handler uses that determine this server is alive. 
   router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
-  // このサーバプログラムのメモリ状態をJSONで表示するAPI
+  // This handler displays the status of the memory of this server as JSON.
   router.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
 
   return router
@@ -70,31 +71,29 @@ import (
   pkgHttpHandlers "webapi/pkg/http/handlers"
 )
 
-// Routes ハンドラをセットしたrouterを返す。
 func (app *Application) Routes() *http.ServeMux {
   r := http.NewServeMux()
 
-  // ファイルサーバーの機能のハンドラ
-  // Env.FileServer.Dir以下のファイルをwebから見ることができる。
+  // This handler works as file server handler.
   fileServer := "/" + app.Cfg.FileServer.Dir + "/"
   r.Handle(fileServer, http.StripPrefix(fileServer, http.FileServer(http.Dir(app.Cfg.FileServer.Dir))))
 
-  // 登録プログラムを実行させるAPI
+  // This API that executes registered service.
   r.HandleFunc("/api/exec/", app.APIExec)
 
-  // ファイルをアップロードするAPI
+  // This API that uploads file.
   r.HandleFunc("/api/upload", app.APIUpload)
 
-  // このサーバプログラムのメモリ状態をJSONで表示するAPI
+  // This handler displays the status of the memory of this server as JSON.
   r.HandleFunc("/health/memory", pkgHttpHandlers.GetRuntimeHandler)
 
-  // プログラムサーバに登録してあるプログラム一覧をJSONで表示するAPI
+  // This API displays the program which is registered on this server.
   r.HandleFunc("/program/all", app.AllHandler)
 
-  // このサーバが生きているかを判断するのに使用するハンドラ
+  // This handler uses that determine this server is alive. 
   r.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
-  // コンテンツをダウンロードするためのAPI
+  // This API works for downloading contents of the file server.
   r.HandleFunc("/download/", app.Download)
 
   return r
@@ -102,20 +101,21 @@ func (app *Application) Routes() *http.ServeMux {
 ```
 
 ## cli
-コマンドラインでexecに登録したマイクロサービスを利用できる
+The user uses microservices that are registered EMS on the command line.
 
 ### How to use
 ```shell
-# 一番シンプルな実行方法 
+# The simplest way to execute.
 cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> 
    
-# パラメータを付加させる場合, -pの後の文字列をダブルクォーテーションで囲む必要がある。中の文字列の構成は登録プログラムの仕様に依存する。 
+# If add some parameta, need to surround letters were after -p with a double quotation.
+# The letters depend on the content of microservices.
 cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> -p "<パラメータ１,パラメータ２>" 
    
-# 実行結果をJSONで受け取る場合 
+# In case that receives the result of executing with JSON.
 cli -j -name <プログラム名> -i <入力ファイル> -o <出力ファイル> 
  
-# プログラムの処理過程を表示しながら実行する場合 
+# In case that executing while outputting a log.
 cli -l -name <プログラム名> -i <入力ファイル> -o <出力ファイル>
 ```
 
@@ -184,7 +184,7 @@ take file, then output file that is added extension of ".json" to them.
 
 <br>
 
-2. [How to create microservices](#how-to-create-microservices)
+2. Move created project directory to exec/programs directory
 ```shell
 mv ConvertToJson exec/programs/ConvertToJson
 ```

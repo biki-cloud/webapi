@@ -1,4 +1,4 @@
-## EMS (Easy Micro Service)
+## EMS (Easy MicroService)
 
 EMS is a platform where everybody can develop microservices.
 Users can concentrate on developing their microservices.
@@ -115,17 +115,17 @@ The user uses microservices that are registered EMS on the command line.
 ### How to use
 ```shell
 # The simplest way to execute.
-cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> 
+cli -name <program name> -i <input file> -o <output directory> 
    
 # If add some parameta, need to surround letters were after -p with a double quotation.
 # The letters depend on the content of microservices.
-cli -name <プロラム名> -i <入力ファイル> -o <出力ファイル> -p "<パラメータ１,パラメータ２>" 
+cli -name <program name> -i <input file> -o <output directory> -p "<parameter1,parameter2>" 
    
 # In case that receives the result of executing with JSON.
-cli -j -name <プログラム名> -i <入力ファイル> -o <出力ファイル> 
+cli -j -name <program name> -i <input file> -o <output directory> 
  
 # In case that executing while outputting a log.
-cli -l -name <プログラム名> -i <入力ファイル> -o <出力ファイル>
+cli -l -name <program name> -i <input file> -o <output directory>
 ```
 
 

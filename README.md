@@ -19,8 +19,11 @@ Usually, EMS works on the k8s.
 
 ## Let's Get started
 how to work as local environment.
+
+1. deploy to local.
 ```shell
 cd deployment/local 
+
 ./deploy.sh 
 apigw1
 apigw2
@@ -32,7 +35,7 @@ process kill
 run all server
 
 ps
-  PID TTY           TIME CMD
+PID TTY           TIME CMD
 22639 ttys000    0:00.01 files/apigw1/apigw -port 8001
 22640 ttys000    0:00.01 files/apigw2/apigw -port 8002
 22641 ttys000    0:00.01 files/exec1/exec -port 9001
@@ -40,6 +43,7 @@ ps
 22643 ttys000    0:00.01 files/website1/website -port 7001
 ```
 
+2. Verify 
 Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 ## Why I created EMS

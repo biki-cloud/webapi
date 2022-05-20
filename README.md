@@ -20,7 +20,7 @@ Usually, EMS works on the k8s.
 ## Let's Get started
 how to work as local environment.
 
-1. deploy to local.
+1. deploy to local
 ```shell
 cd deployment/local 
 
@@ -43,7 +43,7 @@ PID TTY           TIME CMD
 22643 ttys000    0:00.01 files/website1/website -port 7001
 ```
 
-2. Verify 
+2. Verify <br>
 Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 ## Why I created EMS

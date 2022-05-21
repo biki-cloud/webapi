@@ -47,7 +47,7 @@ PID TTY           TIME CMD
 Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 ## Why I created EMS
-description about that why i created EMS.
+description about that why I created EMS.
 
 ## Web Servers of EMS
 

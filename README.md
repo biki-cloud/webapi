@@ -21,7 +21,7 @@ Usually, EMS works on the k8s.
 how to work as local environment.
 
 1. deploy to local
-```shell
+```commandline
 cd deployment/local 
 
 ./deploy.sh 
@@ -42,12 +42,19 @@ PID TTY           TIME CMD
 22642 ttys000    0:00.01 files/exec2/exec -port 9002
 22643 ttys000    0:00.01 files/website1/website -port 7001
 ```
+<br>
 
-2. Verify <br>
+2. Verify to see website is working <br>
 Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 ## Why I created EMS
-description about that why I created EMS.
+The reason why I created EMS is that I want everybody to develop microservices easily.
+Usually, when developing microservices, need to create the logic of communication of other services.
+For example, it is like a REST API or GRPC or etc.
+
+But It is not easy for a beginner who has been starting to learn to program.
+So EMS provides the logic of connection between all microservices. By doing that, Beginner can create microservices, even if it is a big service.
+And They don't need to care about the logic of communication with other microservices.
 
 ## Web Servers of EMS
 

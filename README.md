@@ -51,6 +51,15 @@ Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 
 ### How to work on docker environment.
+```commandline
+docker push docker-hub:5500/<image>:<tag>
+
+then 
+
+docker run -p 7001:80 docker-hub/website:v1
+docker run -p 8001:80 docker-hub/apigw:v1
+docker run -p 80:80 docker-hub/exec:v1
+```
 
 ## Why I created EMS
 The reason why I created EMS is that I want everybody to develop microservices easily.

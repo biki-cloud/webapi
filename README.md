@@ -6,6 +6,8 @@ Usually, EMS works on the k8s.
 
 ## Contents
 - [Let's Get started](#lets-get-started)
+    - ["Local Environment"](#how-to-work-on-local-environment)
+    - ["Docker Environment"](#how-to-work-on-docker-environment)
 - [Why I created EMS](#why-i-created-ems)
 - [Web Servers of EMS](#web-servers-of-ems)
     - [website](#website)
@@ -18,7 +20,7 @@ Usually, EMS works on the k8s.
 - [How to create microservices](#How-to-create-microservices)
 
 ## Let's Get started
-how to work as local environment.
+### How to work on local environment.
 
 1. deploy to local
 ```commandline
@@ -46,6 +48,9 @@ PID TTY           TIME CMD
 
 2. Verify to see website is working <br>
 Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
+
+
+### How to work on docker environment.
 
 ## Why I created EMS
 The reason why I created EMS is that I want everybody to develop microservices easily.

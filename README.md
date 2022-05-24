@@ -64,7 +64,7 @@ docker run -e LOCAL_APIGW_SERVERS="http://192.168.1.12:8001"  -p 7001:80 192.168
 docker run -p 8001:80 -e LOCAL_EXEC_SERVERS="http://192.168.1.12:9001"  192.168.1.12:5010/apigw:v1.1.1
 
 # exec
-docker run -p 9001:80 -e DOWNLOAD_PORT="9001" 192.168.1.12:5010/exec-python:v1.1.11
+docker run -p 9001:80 -e DOWNLOAD_PORT="9001" -e MY_IP="192.168.1.12" 192.168.1.12:5010/exec-python:v1.1.11
 ```
 
 ## Why I created EMS

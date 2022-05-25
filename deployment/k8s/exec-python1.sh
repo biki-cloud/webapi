@@ -23,11 +23,11 @@ echo "docker rmi 192.168.1.12:5010/exec-python:v1.0.1"
 docker rmi 192.168.1.12:5010/exec-python:v1.0.1
 
 # build from Dockerfile
-echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.5"
-docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.1.5 .
+echo "docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.0.6"
+docker build --no-cache -t 192.168.1.12:5010/exec-python:v1.1.6 .
 
-echo "docker push 192.168.1.12:5010/exec-python:v1.0.5"
-docker push 192.168.1.12:5010/exec-python:v1.1.5
+echo "docker push 192.168.1.12:5010/exec-python:v1.0.6"
+docker push 192.168.1.12:5010/exec-python:v1.1.6
 
 # cd k8s
 cd ..

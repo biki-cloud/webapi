@@ -50,7 +50,10 @@ func (f *executer) Execute(ctx contextManager.ContextManager) (out outputManager
 
 	// 出力ファイルたちはまだ通常のパスなのでそれを
 	// CURLで取得するためにURLパスに変換する。
-	outFileURLs, err := GetOutFileURLs(ctx.OutputDir(), ctx.Env().ProgramServerIP, ctx.Env().ProgramServerPort, ctx.Env().FileServer.Dir)
+	// ctx.OutputDir() -> /root/fileserver/work/xxxxx. コマンド実行の際にフルパスにしたいのでフルパスになっている。
+	// GetOutFileURLsの第一引数に渡す時はfileserver/work/xxxxにしなければならない。
+	outputDirRelativePath := ctx.OutputDir()[strings.Index(ctx.OutputDir(), ctx.Env().FileServer.Dir):]
+	outFileURLs, err := GetOutFileURLs(outputDirRelativePath, ctx.Env().ProgramServerIP, ctx.Env().ProgramServerPort, ctx.Env().FileServer.Dir)
 	if err != nil {
 		out.SetStatus(msgs.SERVERERROR)
 		out.SetErrorMsg(err.Error())

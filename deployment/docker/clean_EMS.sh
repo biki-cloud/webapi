@@ -8,3 +8,5 @@ docker rm apigw
 
 docker stop exec
 docker rm exec
+
+echo "Cleaned EMS containers"

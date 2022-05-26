@@ -6,7 +6,6 @@ Usually, EMS works on the k8s.
 
 ## Contents
 - [Let's Get started](#lets-get-started)
-    - [Local Environment](#how-to-work-on-local-environment)
     - [Docker Environment](#how-to-work-on-docker-environment)
 - [Why I created EMS](#why-i-created-ems)
 - [Web Servers of EMS](#web-servers-of-ems)
@@ -20,53 +19,23 @@ Usually, EMS works on the k8s.
 - [How to create microservices](#How-to-create-microservices)
 
 ## Let's Get started
-### How to work on local environment.
-
-1. deploy to local
-```commandline
-cd deployment/local 
-
-./deploy.sh 
-apigw1
-apigw2
-server1
-server2
-website1
-cli
-process kill
-run all server
-
-ps
-PID TTY           TIME CMD
-22639 ttys000    0:00.01 files/apigw1/apigw -port 8001
-22640 ttys000    0:00.01 files/apigw2/apigw -port 8002
-22641 ttys000    0:00.01 files/exec1/exec -port 9001
-22642 ttys000    0:00.01 files/exec2/exec -port 9002
-22643 ttys000    0:00.01 files/website1/website -port 7001
-```
+### Docker Environment.
 <br>
-
-2. Verify to see website is working <br>
-Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
-
-
-### How to work on docker environment.
-<br>
-1. start EMS
+1. Start EMS containers
 
 ```commandline
 cd deployment/docker
 
 ./start_EMS.sh
-please access this url: http://192.168.1.12:7001/user/top
+Please access this URL: http://<Your local IP>:7001/user/top
 ```
 <br>
 
-2. Access URL on browser.
+2. Access URL on browser
 
 <br>
 
-3. Stop and Clean EMS container
+3. Clean EMS container
 ```commandline
 cd deployment/docker
 

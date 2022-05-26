@@ -10,4 +10,4 @@ docker run -p 8001:80 -e LOCAL_EXEC_SERVERS="http://${myIPAddress}:9001" --name 
 # exec
 docker run -p 9001:80 -e DOWNLOAD_PORT="9001" -e MY_IP="${myIPAddress}" --name exec 192.168.1.12:5010/exec-python:v1.1.11 > logs/exec.log &
 
-echo "please access this url: http://${myIPAddress}:7001/user/top"
+echo "Please access this URL: http://${myIPAddress}:7001/user/top"

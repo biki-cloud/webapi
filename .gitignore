@@ -20,3 +20,4 @@ deployment/k8s/website-kube/website
 deployment/local/files/
 /deployment/local/log/
 tree.txt
+logs/

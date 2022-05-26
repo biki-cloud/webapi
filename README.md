@@ -51,20 +51,26 @@ Access to [http://localhost:7001/user/top](http://localhost:7001/user/top)
 
 
 ### How to work on docker environment.
+<br>
+1. start EMS
+
 ```commandline
-docker push docker-hub:5500/<image>:<tag>
+cd deployment/docker
 
-then 
+./start_EMS.sh
+please access this url: http://192.168.1.12:7001/user/top
+```
+<br>
 
+2. Access URL on browser.
 
-# website
-docker run -e LOCAL_APIGW_SERVERS="http://192.168.1.12:8001"  -p 7001:80 192.168.1.12:5010/website:v1.0.8
+<br>
 
-# apigw
-docker run -p 8001:80 -e LOCAL_EXEC_SERVERS="http://192.168.1.12:9001"  192.168.1.12:5010/apigw:v1.1.1
+3. Stop and Clean EMS container
+```commandline
+cd deployment/docker
 
-# exec
-docker run -p 9001:80 -e DOWNLOAD_PORT="9001" -e MY_IP="192.168.1.12" 192.168.1.12:5010/exec-python:v1.1.11
+./clean_EMS.sh
 ```
 
 ## Why I created EMS

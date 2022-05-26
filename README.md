@@ -6,7 +6,7 @@ Usually, EMS works on the k8s.
 
 ## Contents
 - [Let's Get started](#lets-get-started)
-    - [Docker Environment](#how-to-work-on-docker-environment)
+    - [Docker Environment](#docker-environment)
 - [Why I created EMS](#why-i-created-ems)
 - [Web Servers of EMS](#web-servers-of-ems)
     - [website](#website)

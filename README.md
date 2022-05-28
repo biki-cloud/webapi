@@ -19,9 +19,14 @@ Usually, EMS works on the k8s.
 - [How to create microservices](#How-to-create-microservices)
 
 ## Let's Get started
-### Docker Environment.
+1. Clone
+```commandline
+git clone https://github.com/biki-cloud/webapi.git
+```
+
 <br>
-1. Start EMS containers
+
+2. Start EMS containers
 
 ```commandline
 cd deployment/docker
@@ -31,11 +36,11 @@ Please access this URL: http://<Your local IP>:7001/user/top
 ```
 <br>
 
-2. Access URL on browser
+3. Access URL on browser
 
 <br>
 
-3. Clean EMS container
+4. Clean EMS container
 ```commandline
 cd deployment/docker
 

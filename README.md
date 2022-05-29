@@ -18,7 +18,7 @@ Usually, EMS works on the k8s.
 - [How to create microservices](#How-to-create-microservices)
 
 ## Let's Get started
-1. Clone
+1. Installing
 ```commandline
 git clone https://github.com/biki-cloud/webapi.git
 ```

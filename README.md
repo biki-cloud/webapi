@@ -31,7 +31,16 @@ git clone https://github.com/biki-cloud/webapi.git
 cd deployment/docker
 
 ./start_EMS.sh
-Please access this URL: http://<Your local IP>:7001/user/top
+Your IPAddress: 192.168.1.12 # IPAddress is dependent on your PC.
+
+docker run -e LOCAL_APIGW_SERVERS=http://192.168.1.12:8001 -p 7001:80 --name website bikibiki/website:v1.0.8
+
+docker run -p 8001:80 -e LOCAL_EXEC_SERVERS=http://192.168.1.12:9001 --name apigw bikibiki/apigw:v1.1.1
+
+docker run -p 9001:80 -e DOWNLOAD_PORT=9001 -e MY_IP=192.168.1.12 --name exec bikibiki/exec-python:v1.0.20
+
+
+Please access this URL: http://192.168.1.12:7001/user/top
 ```
 <br>
 

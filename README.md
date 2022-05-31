@@ -75,14 +75,16 @@ website is a web application that users use registered microservices of EMS.
 func (app *Application) Routes() *http.ServeMux {
 router := http.NewServeMux()
 
-// ユーザがこのハンドラにアクセスした場合は全てのサーバにアクセスし、全てのプログラムを表示する。
+// This handler shows all programs to use.
 router.HandleFunc("/user/top", app.Top)
 
+// This handler executes microservices.
 router.HandleFunc("/user/exec/", app.Exec)
 
+// File server handler
 router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(currentDir, "ui/static")))))
 
-// このサーバが生きているかを判断するのに使用するハンドラ
+// This handler uses that determine this server is alive. 
 router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
 return router

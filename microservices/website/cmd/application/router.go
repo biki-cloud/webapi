@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"path/filepath"
 	pkgHttpHandlers "webapi/pkg/http/handlers"
-
 	pkgOs "webapi/pkg/os"
 )
 

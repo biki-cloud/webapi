@@ -12,10 +12,12 @@
 </head>
 
 <body>
-    <table border="1" id="pro-table">
+    <input type="search" class="light-table-filter" data-table="order-table" placeholder="検索" />
+
+    <table border="1" id="pro-table" class="order-table">
         <tr>
-            <th>プログラム</th>
-            <th>ヘルプ</th>
+            <th class="table-title">プログラム</th>
+            <th class="table-title">ヘルプ</th>
         </tr>
         {{ range .ProInfos }}
         <tr>
@@ -42,5 +44,7 @@
         }
     </script>
 </body>
+
+<script src="/static/js/searchTable.js"></script>
 
 </html>

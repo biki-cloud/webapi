@@ -48,3 +48,5 @@ echo "process kill"
 
 echo "run all server"
 ./server_run.sh
+
+echo please see http://localhost:7001/user/top

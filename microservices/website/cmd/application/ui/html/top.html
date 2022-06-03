@@ -7,13 +7,33 @@
     <link rel="stylesheet" type="text/css" href="/static/css/body.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/table.css" />
     <link rel="stylesheet" type="text/css" href="/static/css/button.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/input_text.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/title.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/cool_tag.css" />
+
     <script src="/static/js/main.js"></script>
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.png" />
 </head>
 
 <body>
-    <input type="search" class="light-table-filter" data-table="order-table" placeholder="検索" />
+    <div class="title">
+        <h1>Claudia</h1>
+    </div>
 
+    <div class="cp_iptxt">
+        <label class="ef">
+        <h2 class="cool-tag">検索</h2>
+        <input
+          type="search"
+          class="light-table-filter"
+          data-table="order-table"
+          placeholder="検索文字列を入力してください"
+        />
+      </label>
+    </div>
+
+    <br />
+    <h2 class="cool-tag">サービスリスト</h2>
     <table border="1" id="pro-table" class="order-table">
         <tr>
             <th class="table-title">プログラム</th>

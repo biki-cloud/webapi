@@ -5,20 +5,28 @@ Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
 ## Contents
+
+- [EMS (Easy MicroService)](#ems-easy-microservice)
+- [Contents](#contents)
 - [Let's Get started](#lets-get-started)
 - [Why I created EMS](#why-i-created-ems)
 - [Web Servers of EMS](#web-servers-of-ems)
-    - [website](#website)
-    - [apigw](#apigw)
-      - [apigw REST API](#apigw-REST-API)
-    - [exec](#exec)
-      - [exec REST API](#exec-REST-API)
-    - [cli](#cli)
-- [Test](#Test)
-- [How to create microservices](#How-to-create-microservices)
+- [website](#website)
+  - [website REST API](#website-rest-api)
+- [apigw](#apigw)
+  - [apigw REST API](#apigw-rest-api)
+- [exec](#exec)
+  - [exec REST API](#exec-rest-api)
+- [cli](#cli)
+  - [How to use](#how-to-use)
+- [Test](#test)
+- [How to create microservices](#how-to-create-microservices)
+- [How to register microservices to exec service.](#how-to-register-microservices-to-exec-service)
 
 ## Let's Get started
+
 1. Installing
+
 ```commandline
 git clone https://github.com/biki-cloud/webapi.git
 ```
@@ -42,6 +50,7 @@ docker run -p 9001:80 -e DOWNLOAD_PORT=9001 -e MY_IP=192.168.1.12 --name exec bi
 
 Please access this URL: http://192.168.1.12:7001/user/top
 ```
+
 <br>
 
 3. Access URL on browser
@@ -49,6 +58,7 @@ Please access this URL: http://192.168.1.12:7001/user/top
 <br>
 
 4. Clean EMS container
+
 ```commandline
 cd deployment/docker
 
@@ -56,6 +66,7 @@ cd deployment/docker
 ```
 
 ## Why I created EMS
+
 The reason why I created EMS is that I want everybody to develop microservices easily.
 Usually, when developing microservices, need to create the logic of communication of other services.
 For example, it is like a REST API or GRPC or etc.
@@ -67,34 +78,38 @@ And They don't need to care about the logic of communication with other microser
 ## Web Servers of EMS
 
 ## website
+
 website is a web application that users use registered microservices of EMS.
 
 ### website REST API
+
 ```go
 
 func (app *Application) Routes() *http.ServeMux {
-router := http.NewServeMux()
+  router := http.NewServeMux()
 
-// This handler shows all programs to use.
-router.HandleFunc("/user/top", app.Top)
+  // This handler shows all programs to use.
+  router.HandleFunc("/user/top", app.Top)
 
-// This handler executes microservices.
-router.HandleFunc("/user/exec/", app.Exec)
+  // This handler executes microservices.
+  router.HandleFunc("/user/exec/", app.Exec)
 
-// File server handler
-router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(currentDir, "ui/static")))))
+  // File server handler
+  router.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir(filepath.Join(currentDir, "ui/static")))))
 
-// This handler uses that determine this server is alive. 
-router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
+  // This handler uses that determine this server is alive.
+  router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
 return router
 }
 ```
 
 ## apigw
+
 apigw works load balancing to exec service and manage registered microservices of exec service.
 
 ### apigw REST API
+
 ```go
 package application
 
@@ -120,7 +135,7 @@ func (app *Application) Routes() *http.ServeMux {
   // Return display it as JSON.
   router.HandleFunc("/program-server/program/all", app.GetAllProgramsHandler)
 
-  // This handler uses that determine this server is alive. 
+  // This handler uses that determine this server is alive.
   router.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
   // This handler displays the status of the memory of this server as JSON.
@@ -131,9 +146,11 @@ func (app *Application) Routes() *http.ServeMux {
 ```
 
 ## exec
+
 exec works registering created microservices and executing microservices.
 
 ### exec REST API
+
 ```go
 package application
 
@@ -162,7 +179,7 @@ func (app *Application) Routes() *http.ServeMux {
   // This API displays the program which is registered on this server.
   r.HandleFunc("/program/all", app.AllHandler)
 
-  // This handler uses that determine this server is alive. 
+  // This handler uses that determine this server is alive.
   r.HandleFunc("/health", pkgHttpHandlers.HealthHandler)
 
   // This API works for downloading contents of the file server.
@@ -173,37 +190,41 @@ func (app *Application) Routes() *http.ServeMux {
 ```
 
 ## cli
+
 The user uses microservices that are registered EMS on the command line.
 
 ### How to use
+
 ```shell
 # The simplest way to execute.
-cli -name <program name> -i <input file> -o <output directory> 
-   
+cli -name <program name> -i <input file> -o <output directory>
+
 # If add some parameta, need to surround letters were after -p with a double quotation.
 # The letters depend on the content of microservices.
-cli -name <program name> -i <input file> -o <output directory> -p "<parameter1,parameter2>" 
-   
+cli -name <program name> -i <input file> -o <output directory> -p "<parameter1,parameter2>"
+
 # In case that receives the result of executing with JSON.
-cli -j -name <program name> -i <input file> -o <output directory> 
- 
+cli -j -name <program name> -i <input file> -o <output directory>
+
 # In case that executing while outputting a log.
 cli -l -name <program name> -i <input file> -o <output directory>
 ```
 
-
 ## Test
+
 ```shell
 go test ./...
 ```
 
 ## How to create microservices
+
 1. Determine microservices that we want to create <br>
-Content of implement: We want to create microservices that take file, then output file that is added extension of ".json" to them.
+   Content of implement: We want to create microservices that take file, then output file that is added extension of ".json" to them.
 
 <br>
 
 2. Create project
+
 ```shell
 mkdir ConvertToJson
 cd ConvertToJson
@@ -213,13 +234,15 @@ touch convert_to_json.py
 <br>
 
 3. Determine command to execute
+
 ```shell
-python3 convert_to_json.py <input file> <output dir> 
+python3 convert_to_json.py <input file> <output dir>
 ```
 
 <br>
 
 4. Coding
+
 ```python
 import os
 import shutil
@@ -235,13 +258,16 @@ shutil.move(infile, outfile)
 <br>
 
 5. Write help about coded program
+
 ```shell
 cat help.txt
 take file, then output file that is added extension of ".json" to them.
 ```
 
 ## How to register microservices to exec service.
+
 1. Edit exec/config/programConfig.json
+
 ```json
 {
   "programs": [
@@ -257,6 +283,7 @@ take file, then output file that is added extension of ".json" to them.
 <br>
 
 2. Move created project directory to exec/programs directory
+
 ```shell
 mv ConvertToJson exec/programs/ConvertToJson
 ```

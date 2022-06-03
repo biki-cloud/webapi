@@ -1,0 +1,25 @@
+.cool-tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    text-align: center;
+}
+
+.cool-tag::before,
+.cool-tag::after {
+    content: "";
+    width: 3px;
+    height: 40px;
+    background-color: #3fc1c9;
+}
+
+.cool-tag::before {
+    margin-right: 30px;
+    transform: rotate(-35deg);
+}
+
+.cool-tag::after {
+    margin-left: 30px;
+    transform: rotate(35deg);
+}

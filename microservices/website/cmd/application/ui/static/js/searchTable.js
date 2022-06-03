@@ -34,7 +34,7 @@
             if (inputTags.length > 0) {
                 for (var i = 0; i < inputTags.length; i++) {
                     if (inputTags[i].type === "submit") {
-                        submitValue = inputTags[i].value;
+                        submitValue = inputTags[i].value.toLowerCase();
                     }
                 }
             }

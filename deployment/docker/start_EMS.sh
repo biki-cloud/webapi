@@ -4,7 +4,7 @@ myIPAddress=`ifconfig | grep "inet " | grep -Fv 127.0.0.1 | awk '{print $2}' | s
 echo "Your IPAddress: ${myIPAddress}"
 
 echo ""
-websiteCommand="docker run -e LOCAL_APIGW_SERVERS=http://${myIPAddress}:8001 -p 7001:80 --name website bikibiki/website:v1.0.8"
+websiteCommand="docker run -e LOCAL_APIGW_SERVERS=http://${myIPAddress}:8001 -p 7001:80 --name website bikibiki/website:v1.0.9"
 echo "${websiteCommand}"
 ${websiteCommand} > logs/website.log &
 

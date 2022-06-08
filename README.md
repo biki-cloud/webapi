@@ -199,7 +199,7 @@ The user uses microservices that are registered EMS on the command line.
 # The simplest way to execute.
 cli -name <program name> -i <input file> -o <output directory>
 
-# If add some parameta, need to surround letters were after -p with a double quotation.
+# If add some parameter, need to surround letters were after -p with a double quotation.
 # The letters depend on the content of microservices.
 cli -name <program name> -i <input file> -o <output directory> -p "<parameter1,parameter2>"
 

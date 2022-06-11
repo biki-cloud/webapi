@@ -72,7 +72,7 @@ For example, it is like a REST API or GRPC or etc.
 
 But It is not easy for a beginner who has been starting to learn to program.
 So EMS provides the logic of connection between all microservices.
-By doing that, Beginner can create microservices, even if it is a big service.
+By doing that, Beginner can create microservices. even if it is a big service.
 And They don't need to care about the logic of communication with other microservices.
 
 ## Web Servers of EMS

@@ -123,6 +123,8 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// プログラムを保持しているサーバたちの中で一番使用メモリが少ないサーバを選択する。
+		// この処理を行うと、execサーバが多くなってくるとwebsiteの/user/topにアクセスした時にローディング時間が長くなる。
+		// なので対策としてはプログラムを保持しているサーバをメモリの使用量で判断するのではなく、ランダムで一台選択するようにする。
 		mmss := minimumServerSelector.New()
 		mg := memoryGetter.New()
 		sac := serverAliveConfirmer.New()

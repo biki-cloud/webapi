@@ -87,6 +87,30 @@
 <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 
 <script>
+    function GetValueFromCookie(key) {
+        const cookies = document.cookie;
+        const array = cookies.split('; ');
+        var result = null;
+
+        array.forEach(function(value) {
+            const content = value.split('=');
+            if (key == content[0]) {
+                result = content[1]
+            }
+        })
+        return result
+    }
+
+    // Cookieからこのプログラムのパラメータが保存されていればそれを取ってきて
+    // 自動的にパラメータ欄にセットする。
+    function SetParameterUsingCookie() {
+        var proName = document.getElementById("proName").value
+        var parameter = GetValueFromCookie(proName + "_parameter");
+        var parameta_tag = document.getElementById("parameta");
+        parameta_tag.value = parameter;
+    }
+    SetParameterUsingCookie();
+
     function basename(path) {
         return path.replace(/.*\//, "");
     }
@@ -292,8 +316,11 @@
         }
 
         // プログラム名、パラメータを取得する
-        proName = document.getElementById("proName").value
-        parameta = document.getElementById("parameta").value
+        var proName = document.getElementById("proName").value
+        var parameta = document.getElementById("parameta").value
+
+        // <proName>_parameterの名前でCookieに登録する。
+        document.cookie = proName + "_parameter" + "=" + parameta;
 
         for (let i = 0; i < Files.length; ++i) {
             const form = $('#form')[0];

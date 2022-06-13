@@ -64,6 +64,8 @@ cd deployment/docker
 ./clean_EMS.sh
 ```
 
+Done!
+
 ## Why I created EMS
 
 The reason why I created EMS is that I want everybody to develop microservices easily.

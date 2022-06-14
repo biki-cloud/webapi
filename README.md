@@ -86,7 +86,6 @@ website is a web application that users use registered microservices of EMS.
 ### website REST API
 
 ```go
-
 func (app *Application) Routes() *http.ServeMux {
   router := http.NewServeMux()
 

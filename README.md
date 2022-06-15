@@ -262,7 +262,7 @@ shutil.move(infile, outfile)
 
 ```shell
 cat help.txt
-take file, then output file that is added extension of ".json" to them.
+take file, then output file that is added extension of ".json" to them
 ```
 
 ## How to register microservices to exec service.

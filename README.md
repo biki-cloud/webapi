@@ -274,7 +274,7 @@ take file, then output file that is added extension of ".json" to them
   "programs": [
     {
       "name": "ConvertToJson",
-      "command": "python3 programs/ConvertToJson/convert_to_json.py INPUTFILE OUTPUTDIR",
+      "command": "python3 programs/ConvertToJson/convert_to_json.py INPUTFILE OUTPUTDIR PARAMETA",
       "helpPath": "programs/ConvertToJson/help.txt"
     }
   ]

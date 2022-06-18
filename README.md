@@ -4,7 +4,6 @@ EMS is a platform where everybody can develop microservices.
 Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
-
 ```mermaid
 graph LR
     user(User) -->|Access| website[Website]
@@ -19,17 +18,18 @@ graph LR
 ```
 
 ### How to use Website
+
 https://user-images.githubusercontent.com/66401814/174425669-144c6855-36fd-4056-a647-f37b0da1dfa0.mov
 
-
 ### How to use CLI
+
 https://user-images.githubusercontent.com/66401814/174425678-9b1c329d-4044-4348-8771-644e56ca4466.mov
-
-
 
 ## Contents
 
 - [EMS (Easy MicroService)](#ems-easy-microservice)
+  - [How to use Website](#how-to-use-website)
+  - [How to use CLI](#how-to-use-cli)
 - [Contents](#contents)
 - [Let's Get started](#lets-get-started)
 - [Why I created EMS](#why-i-created-ems)
@@ -45,6 +45,8 @@ https://user-images.githubusercontent.com/66401814/174425678-9b1c329d-4044-4348-
 - [Test](#test)
 - [How to create microservices](#how-to-create-microservices)
 - [How to register microservices to exec service.](#how-to-register-microservices-to-exec-service)
+
+<br>
 
 ## Let's Get started
 

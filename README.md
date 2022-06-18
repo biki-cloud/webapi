@@ -5,11 +5,16 @@ Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
 ```mermaid
-graph TB
-    A[Hard edge] -->|Link text| B(Round edge)
-    B --> C{Decision}
-    C -->|One| D[Result one]
-    C -->|Two| E[Result two]
+graph LR
+    user(User) -->|Access| website[Website]
+    programmer(Programmer) -->|Use| G[CLI]
+    G[CLI] -->|Request| apigw[APIGW]
+    subgraph kubernetes
+      website[Website] -->|Request| apigw[APIGW]
+      apigw[APIGW] -->|Command| exec1[Exec1<br>MicroService1<br>MicroService2]
+      apigw[APIGW] -->|Command| exec2[Exec2<br>MicroService3<br>MicroService4]
+      apigw[APIGW] -->|Command| exec3[Exec3<br>MicroService5<br>MicroService6]
+    end
 ```
 
 ## Contents

@@ -5,8 +5,6 @@ Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
 
-https://user-images.githubusercontent.com/66401814/174425041-62add08f-5a6c-4b14-869a-364e8de8741b.mov
-
 
 ```mermaid
 graph LR

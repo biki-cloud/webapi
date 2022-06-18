@@ -4,6 +4,14 @@ EMS is a platform where everybody can develop microservices.
 Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
+```mermaid
+graph TB
+    A[Hard edge] -->|Link text| B(Round edge)
+    B --> C{Decision}
+    C -->|One| D[Result one]
+    C -->|Two| E[Result two]
+```
+
 ## Contents
 
 - [EMS (Easy MicroService)](#ems-easy-microservice)

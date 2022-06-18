@@ -5,7 +5,6 @@ Users can concentrate on developing their microservices.
 Usually, EMS works on the k8s.
 
 
-
 ```mermaid
 graph LR
     user(User) -->|Access| website[Website]
@@ -18,6 +17,15 @@ graph LR
       apigw[APIGW] -->|Command| exec3[Exec3<br>MicroService5<br>MicroService6]
     end
 ```
+
+### How to use Website
+https://user-images.githubusercontent.com/66401814/174425669-144c6855-36fd-4056-a647-f37b0da1dfa0.mov
+
+
+### How to use CLI
+https://user-images.githubusercontent.com/66401814/174425678-9b1c329d-4044-4348-8771-644e56ca4466.mov
+
+
 
 ## Contents
 

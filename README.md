@@ -64,6 +64,7 @@ git clone https://github.com/biki-cloud/webapi.git
 cd deployment/docker
 
 ./start_EMS.sh
+
 Your IPAddress: 192.168.1.12 # IPAddress is dependent on your PC.
 
 docker run -e LOCAL_APIGW_SERVERS=http://192.168.1.12:8001 -p 7001:80 --name website bikibiki/website:v1.0.8

@@ -71,6 +71,10 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type tmpProInfo struct {
+		// Help はプログラムの場所においてあるhelp.txtなどを読み込み、/user/topに表示するための値。
+		// その時、プログラム開発者次第でわかりやすくヘルプが作成できるようにhelp.txtなどに書かれた
+		// 文字列をHTMLに変換している。なお、help.txtに普通の文字列を記入した場合は普通に表示されるため
+		// 余裕がある人だけHTMLで記述することができる。
 		Help    template.HTML `json:"help"`
 		Command string `json:"command"`
 	}

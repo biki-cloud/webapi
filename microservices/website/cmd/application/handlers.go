@@ -3,6 +3,7 @@ package application
 import (
 	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -70,12 +71,12 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 	}
 
 	type tmpProInfo struct {
-		Help    string `json:"help"`
+		Help    template.HTML `json:"help"`
 		Command string `json:"command"`
 	}
 	type proInfo struct {
 		Name    string
-		Help    string
+		Help    template.HTML
 		Command string
 		URL     string
 	}

@@ -52,9 +52,9 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("APIゲートウェイサーバにてエラーが発生しました。err: %v\n", err)
 	}
 
-	minUrl := minimumServerSelector.GetMinimumMemoryServer(serverMemoryMap)
+	minURL := minimumServerSelector.GetMinimumMemoryServer(serverMemoryMap)
 
-	apigwAddr := minUrl
+	apigwAddr := minURL
 
 	// 登録プログラムの情報を取得する
 	command := fmt.Sprintf("curl %v/program-server/program/all", apigwAddr)
@@ -85,7 +85,7 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 		ProInfos []proInfo
 	}
 
-	var dataToHtml htmlData
+	var dataToHTML htmlData
 
 	// execサーバのリストを取得する
 	resp, err := http.Get(apigwAddr + "/program-server/alive")
@@ -140,47 +140,75 @@ func (app *Application) Top(w http.ResponseWriter, r *http.Request) {
 			Command: tmpInfo.Command,
 			URL:     url,
 		}
-		dataToHtml.ProInfos = append(dataToHtml.ProInfos, p)
+		dataToHTML.ProInfos = append(dataToHTML.ProInfos, p)
 	}
 
 	w.Header().Add("Content-Type", "text/html")
 	currentDir, err := pkgOs.GetCurrentDir()
-	serveHtml := filepath.Join(currentDir, "ui/html", "top.html")
-	absHtml, err := filepath.Abs(serveHtml)
+	serveHTML := filepath.Join(currentDir, "ui/html", "top.html")
+	absHTML, err := filepath.Abs(serveHTML)
 	if err != nil {
 		app.ServerError(w, err)
 	}
 
 	// 名前順でソートする
-	sort.Slice(dataToHtml.ProInfos, func(i, j int) bool { return dataToHtml.ProInfos[i].Name < dataToHtml.ProInfos[j].Name })
+	sort.Slice(dataToHTML.ProInfos, func(i, j int) bool { return dataToHTML.ProInfos[i].Name < dataToHTML.ProInfos[j].Name })
 
-	app.RenderTemplate(w, absHtml, dataToHtml)
+	app.RenderTemplate(w, absHTML, dataToHTML)
 }
 
+// Exec ファイルなどをドラッグし、実行ボタンを押してリクエストをするためのページ
 func (app *Application) Exec(w http.ResponseWriter, r *http.Request) {
 
 	currentDir, err := pkgOs.GetCurrentDir()
 	if err != nil {
 		app.ServerError(w, err)
 	}
-	serveHtml := filepath.Join(currentDir, "ui/html", "exec.html")
+	serveHTML := filepath.Join(currentDir, "ui/html", "exec.html")
 
-	proName := r.URL.Path[len("/user/exec/"):]
 	r.ParseForm()
 
 	// top.htmlを表示する段階でプログラムの実行サーバのURIは決まっていて
 	// それをURIをformの一部に載せるのでそれをここで受け取り、またexec.htmlに渡して、
 	// ajaxでそのURIのサーバへPOSTする
 	execServerURI := r.FormValue("execServerURI")
-	help := r.FormValue("help")
+	proName := r.FormValue("proName")
 
-	type data struct {
+	// execServerURIにアクセスしてプログラム情報を取得
+	getProgramInfoURL := execServerURI + "/program/all"
+	resp, _ := http.Get(getProgramInfoURL)
+	programInfoJSON, _ := ioutil.ReadAll(resp.Body)
+	// programInfoJSONはこのようなJSON文字列になる
+	// {
+	// 	"AddZipExt": {
+	// 		"help": "take any file.\noutput file that is added zip extension.\n\u003ch1\u003ethis is h1 tag\u003c/h1\u003e"
+	// 	},
+	//  "xxxxxxxxx": {
+	// 		"help": "xxxxxxxxx"
+	//  },
+	// }
+
+	fmt.Println(string(programInfoJSON))
+
+	// programInfoJSONをマップに変換するための構造体
+    var programInfoMap map[string]map[string]string
+
+	// JSONのバイト文字列を定義したマップへ入れ込む。
+    json.Unmarshal(programInfoJSON, &programInfoMap)
+
+	var help string = programInfoMap[proName]["help"]
+	var detailedHelp string = programInfoMap[proName]["detailedHelp"]
+
+	// htmlに渡すための値を保持する構造体
+	type dataToHTML struct {
 		Name          string
-		Help          string
+		Help          template.HTML
+		DetailedHelp  template.HTML
 		ExecServerURI string
 	}
 
-	d := data{Name: proName, ExecServerURI: execServerURI, Help: help}
+	d := dataToHTML{Name: proName, ExecServerURI: execServerURI, Help: template.HTML(help), DetailedHelp: template.HTML(detailedHelp)}
 
-	app.RenderTemplate(w, serveHtml, d)
+	app.RenderTemplate(w, serveHTML, d)
+	// TODO: topの方は軽い説明にし、execの方で具体的な説明にする。
 }

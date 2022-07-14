@@ -185,7 +185,7 @@ func GetMaterials() []Struct {
 			ExpectedStdErrIsEmpty: true,
 			ExpectedStatus:        msgs.PROGRAMERROR,
 			ExpectedErrMsgIsEmpty: true,
-			ExpectedError:         config2.ProgramNotFoundError,
+			ExpectedError:         config2.ErrProgramNotFound,
 		},
 	}
 	return tests

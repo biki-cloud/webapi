@@ -8,8 +8,9 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"webapi/microservices/exec/env"
 	os2 "webapi/pkg/os"
+
+	"webapi/microservices/exec/env"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 
 var proFilePath string
 
+// SetProConfPath programConfig.jsonのパスをグローバル変数のproFilePathにセットする
 func SetProConfPath(proConfName string) {
 	if strings.Contains(proConfName, string(filepath.Separator)) {
 		panic("proConfName want a file base name!!!!")
@@ -34,8 +36,12 @@ type ProgramConfigHolder interface {
 	Name() string
 	Command() string
 	Help() (string, error)
+	DetailedHelp() (string, error)
 	ReplacedCmd(string, string, string) string
 	ToProperPath()
+	SetCommand(string)
+	SetHelpPath(string)
+	SetDetailedHelpPath(string)
 }
 
 // programConfig はユーザーが入力したプログラムの情報を保持する構造体。
@@ -44,10 +50,12 @@ type programConfig struct {
 	ProName     string `json:"name"`
 	ProCommand  string `json:"command"`
 	ProHelpPath string `json:"helpPath"`
+	ProDetailedHelpPath string `json:"detailedHelpPath"`
 	ProLogName  string `json:"logName"`
 }
 
-func NewProgramConfig() *programConfig {
+// NewProgramConfigHolder programConfigHolderインターフェースを返す
+func NewProgramConfigHolder() ProgramConfigHolder {
 	return &programConfig{}
 }
 
@@ -62,12 +70,14 @@ func (n *programConfig) ToProperPath() {
 	}
 
 	// コマンド、helpなどにcurrentDirを追加し、フルパスにする。
-	p1, err := os2.GetCurrentDir()
+	// currentDirをProCommand,やProHelpPathなどに追加しないとパスがうまくつながらず、エラーが出る。
+	currentDir, err := os2.GetCurrentDir()
 	if err != nil {
 		panic("err msg: " + err.Error())
 	}
-	n.ProCommand = strings.Replace(n.ProCommand, cfg.ProgramsDir, filepath.Join(p1, cfg.ProgramsDir), -1)
-	n.ProHelpPath = strings.Replace(n.ProHelpPath, cfg.ProgramsDir, filepath.Join(p1, cfg.ProgramsDir), -1)
+	n.ProCommand = strings.Replace(n.ProCommand, cfg.ProgramsDir, filepath.Join(currentDir, cfg.ProgramsDir), -1)
+	n.ProHelpPath = strings.Replace(n.ProHelpPath, cfg.ProgramsDir, filepath.Join(currentDir, cfg.ProgramsDir), -1)
+	n.ProDetailedHelpPath = strings.Replace(n.ProDetailedHelpPath, cfg.ProgramsDir, filepath.Join(currentDir, cfg.ProgramsDir), -1)
 }
 
 // Name は構造体のNameを返す
@@ -80,6 +90,11 @@ func (n *programConfig) Command() string {
 	return n.ProCommand
 }
 
+// SetCommand コマンドをセットする
+func (n *programConfig) SetCommand(cmd string) {
+	n.ProCommand = cmd
+}
+
 // Help は構造体のhelpを返す
 func (n *programConfig) Help() (string, error) {
 	bytes, err := ioutil.ReadFile(n.ProHelpPath)
@@ -87,6 +102,25 @@ func (n *programConfig) Help() (string, error) {
 		return "", fmt.Errorf("Help: %v", err)
 	}
 	return string(bytes), nil
+}
+
+// SetHelpPath ヘルプパスをセットする
+func (n *programConfig) SetHelpPath(help string) {
+	n.ProHelpPath = help
+}
+
+// DetailedHelp は構造体のhelpを返す
+func (n *programConfig) DetailedHelp() (string, error) {
+	bytes, err := ioutil.ReadFile(n.ProDetailedHelpPath)
+	if err != nil {
+		return "", fmt.Errorf("DetailedHelp: %v", err)
+	}
+	return string(bytes), nil
+}
+
+// DetailedHelpPath
+func (n *programConfig) SetDetailedHelpPath(path string) {
+	n.ProDetailedHelpPath = path
 }
 
 // ReplacedCmd はprogram_config.jsonに記述されているコマンド文字列のINPUTFILE, OUTPUTDIR, PARAMETA を入力パラメータで置換する。
@@ -98,7 +132,8 @@ func (n *programConfig) ReplacedCmd(infile string, outputDir string, parameta st
 	return cmd
 }
 
-var ProgramNotFoundError = errors.New("program not found error")
+// ErrProgramNotFound 指定されたプログラムが見つからなかった場合に返すエラーの構造体
+var ErrProgramNotFound = errors.New("program not found error")
 
 // GetProConfByName はプログラムの名前を受け取り、programConfig.jsonの中を検索ヒットした
 // ものをProgramConfigHolder(インターフェース)として返す。
@@ -112,7 +147,7 @@ func GetProConfByName(programName string) (ProgramConfigHolder, error) {
 			return program, nil
 		}
 	}
-	return nil, fmt.Errorf("%v: %w", programName, ProgramNotFoundError)
+	return nil, fmt.Errorf("%v: %w", programName, ErrProgramNotFound)
 }
 
 // GetPrograms はprogramConfigHolderのインターフェースを返す。

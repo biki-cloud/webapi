@@ -34,7 +34,7 @@ func (app *Application) APIExec(w http.ResponseWriter, r *http.Request) {
 	ctx, err := contextManager.New(w, r, app.Cfg)
 	// プログラムがこのサーバになかった場合,もしくは他のエラーの場合
 	if err != nil {
-		if errors.Is(err, config.ProgramNotFoundError) {
+		if errors.Is(err, config.ErrProgramNotFound) {
 			msg := fmt.Sprintf("%v is not found.", programName)
 			out.SetErrorMsg(msg)
 		} else {
@@ -80,7 +80,14 @@ func (app *Application) AllHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			app.ServerError(w, err)
 		}
+
+		detailedHelp, err := ele.DetailedHelp()
+		if err != nil {
+			app.ServerError(w, err)
+		}
+
 		m1["help"] = help
+		m1["detailedHelp"] = detailedHelp
 	}
 
 	app.RenderJSON(w, m)

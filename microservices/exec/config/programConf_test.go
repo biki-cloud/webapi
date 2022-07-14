@@ -2,11 +2,11 @@ package config_test
 
 import (
 	"log"
-	"path/filepath"
 	"strings"
 	"testing"
-	"webapi/microservices/exec/config"
 	"webapi/pkg/os"
+
+	"webapi/microservices/exec/config"
 )
 
 var currentDir string
@@ -21,23 +21,43 @@ func init() {
 }
 
 func TestProgramConfig_ToProperPath(t *testing.T) {
-	p := config.NewProgramConfig()
-	p.ProHelpPath = "programs/xxxxx/help.txt"
-	p.ProCommand = "python3 programs/xxxxx/eg.py"
+	// 実際にヘルプやコマンドが記述してあるテキストファイル
+	// を読み込んで、文字列などを表示できるかをテストする
+	// 読み込むテストファイルはこのファイルがあるカレントディレクトリにある
+	// testsディレクトリに入っているファイルたち
+
+	p := config.NewProgramConfigHolder()
+	p.SetHelpPath("tests/help.txt")
+	p.SetCommand("python3 tests/xxxxx/eg.py")
+	p.SetDetailedHelpPath("tests/detailedHelp.html")
+
 	p.ToProperPath()
 
-	if !filepath.IsAbs(p.ProHelpPath) {
-		t.Errorf("p.ProHelpPath is not abs.")
+	// きちんとHelpが読み取れているか
+	help, err := p.Help()
+	if err != nil {
+		t.Errorf("Help() : %v, want: %v \n", err, nil)
 	}
 
-	if !strings.Contains(p.ProCommand, currentDir) {
-		t.Errorf("p.ProCommand doesn't contain abspath.")
+	if !strings.Contains(help, "this is the help.txt") {
+		t.Errorf("doesn't Contain %v of %v", "this is the help.txt", help)
+	}
+
+	// きちんとDetailedHelpが読み取れているか
+	detailedHelp, err := p.DetailedHelp()
+	if err != nil {
+		t.Errorf("DetailedHelp() : %v, want: %v \n", err, nil)
+	}
+
+	if !strings.Contains(detailedHelp, "<h1>detailed help</h1>") {
+		t.Errorf("doesn't Contain %v of %v", "<h1>detailed help</h1>", detailedHelp)
 	}
 }
 
 func TestProgramConfig_ReplacedCmd(t *testing.T) {
-	p := config.NewProgramConfig()
-	p.ProCommand = "INPUTFILE OUTPUTDIR PARAMETA"
+	p := config.NewProgramConfigHolder()
+	p.SetCommand("INPUTFILE OUTPUTDIR PARAMETA")
+	// p.ProCommand = "INPUTFILE OUTPUTDIR PARAMETA"
 	cmd := p.ReplacedCmd("i", "o", "p")
 
 	if cmd != "i o p" {

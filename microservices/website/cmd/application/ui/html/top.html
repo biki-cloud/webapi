@@ -41,14 +41,14 @@
         </tr>
         {{ range .ProInfos }}
         <tr>
-            <td>
+            <th>
                 <form action="/user/exec/{{ .Name }}" method="post">
                     <input type="hidden" name="proName" value="{{ .Name }}" />
                     <input type="hidden" name="help" value="{{ .Help }}" />
                     <input type="hidden" name="execServerURI" value="{{ .URL }}" />
                     <input type="submit" value="{{ .Name }}" class="btn btn-gradient" />
                 </form>
-            </td>
+            </th>
             <td class="help-class">{{ .Help }}</td>
         </tr>
         {{ end }}
